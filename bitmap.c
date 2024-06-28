@@ -22,7 +22,6 @@ void assert(int testresult, char* message) {
 	}
 }
 
-
 /**
  * Retorna o conteudo do mapa de bits.
  * @param bm O mapa de bits.
