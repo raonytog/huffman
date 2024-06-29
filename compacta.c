@@ -23,7 +23,6 @@ int main () {
     int *vetor = calloc(MAX, sizeof(int));
     PreencheVetor(vetor);
     PrintVetor(vetor);
-    PrintVetor(vetor);
 
     return 0;
 }
