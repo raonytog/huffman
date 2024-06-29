@@ -5,10 +5,16 @@
 . Fazer lista de arvores e ordernar
 . Fazer algoritmo para juntar arvores com peso
 
-# 1 - Malu:
+## Notas:
+. ordenar direto este vetor nao funciona pq a gente perde 
+. a nocao de quem eh o caractere de vdd
 
+## 1 - Malu:
 .
 
-# 2 - Raony:
-
+## 2 - Raony:
 .
+
+
+
+
