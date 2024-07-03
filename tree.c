@@ -34,6 +34,11 @@ int RetornaQuantidadeCaracteres(int *vetor){
 }
 
 /** Funcoes para ordenacao */
+int Compara(const void *a, const void *b) {
+    Tree *arv1 = *(Tree **)a, *arv2 = *(Tree **)b;
+    return arv1->info->peso - arv2->info->peso;
+}
+
 void QuickSort(Tree **vet, int inicio, int fim){
     if(inicio>=fim) return;
 
@@ -122,12 +127,6 @@ Tree *criaArvore(Tree *arvDir, Tree*arvEsq, Caracter *info){
     return temp;
 }
 
-
-int Compara(const void *a, const void *b) {
-    Tree *arv1 = *(Tree **)a, *arv2 = *(Tree **)b;
-    return arv1->info->peso - arv2->info->peso;
-}
-
 void ImprimeVetor(Tree **vetor, int quant) {
     if (!vetor) return;
 
@@ -182,7 +181,7 @@ void LiberaArvore(Tree *treeNode) {
     free(treeNode);
 }
 
-void LiberaCaractere(Caracter *caractereStruct) {
-    if (caractereStruct) return;
-    free(caractereStruct);
+void LiberaCaractere(Caracter *character) {
+    if (!character) return;
+    free(character);
 }
