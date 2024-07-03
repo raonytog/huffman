@@ -99,7 +99,7 @@ Caracter *CriaCaracter(int letter, int peso){
 
     return letra;
 }
-
+ 
 Tree **CriaVetorPorPeso(int *vetor){
     if (!vetor) return NULL;
 
@@ -111,6 +111,7 @@ Tree **CriaVetorPorPeso(int *vetor){
             if(vetor[i]>0){
             Caracter *letra = CriaCaracter(i, vetor[i]);
             CaracteresVetor[cont] = malloc(sizeof(Tree));
+            CaracteresVetor[cont]->direita = CaracteresVetor[cont]->esquerda = NULL;
             CaracteresVetor[cont]->info = letra;
             cont++;
             }
@@ -156,6 +157,7 @@ Tree *OrganizaArvorePorPesos(Tree** vetorCaracter, int elementos, int inicio) {
             arvore = criaArvore(vetorCaracter[inicio], vetorCaracter[inicio-1], c);
         
         vetorCaracter[inicio] = arvore;
+        vetorCaracter[inicio - 1] = NULL;
         QuickSort(vetorCaracter,inicio, fim-1);
         elementos--;
     }
@@ -189,11 +191,6 @@ void LiberaCaractere(Caracter *character) {
 
 void LiberaVetorArvores(Tree **treeNode, int qtd) {
     if (!treeNode) return;
-
-    for (int i = 0; i < qtd; i++) {
-        // free(treeNode[i]->info);
-        // free(treeNode[i]);
-    }
 
     free(treeNode);
 }
