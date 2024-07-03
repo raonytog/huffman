@@ -107,7 +107,7 @@ Tree **CriaVetorPorPeso(int *vetor){
     Tree **CaracteresVetor = malloc(quant*(sizeof(Tree*)));
 
     int cont = 0;
-    for(int i = 0; i<MAX; i++){
+    for(int i = 0; i < MAX; i++){
             if(vetor[i]>0){
             Caracter *letra = CriaCaracter(i, vetor[i]);
             CaracteresVetor[cont] = malloc(sizeof(Tree));
@@ -120,10 +120,13 @@ Tree **CriaVetorPorPeso(int *vetor){
 
 Tree *criaArvore(Tree *arvDir, Tree*arvEsq, Caracter *info){
     if(!info) return NULL;
-    Tree *temp = malloc(sizeof(Caracter));
-    temp->info = info;
-    temp->direita = arvDir;
-    temp->esquerda = arvEsq;
+
+    Tree *temp = malloc(sizeof(Tree));
+    if (temp) {
+        temp->info = info;
+        temp->direita = arvDir;
+        temp->esquerda = arvEsq;
+    }
     return temp;
 }
 
@@ -135,7 +138,7 @@ void ImprimeVetor(Tree **vetor, int quant) {
     printf("\n");
 }
 
-Tree *OrganizaArvorePorPesos(Tree** vetorCaracter, int elementos, int inicio){
+Tree *OrganizaArvorePorPesos(Tree** vetorCaracter, int elementos, int inicio) {
     if(!vetorCaracter || (inicio + 1) == elementos) return NULL;
     
     Tree *arvore = NULL;
@@ -182,4 +185,15 @@ void LiberaArvore(Tree *treeNode) {
 void LiberaCaractere(Caracter *character) {
     if (!character) return;
     free(character);
+}
+
+void LiberaVetorArvores(Tree **treeNode, int qtd) {
+    if (!treeNode) return;
+
+    for (int i = 0; i < qtd; i++) {
+        // free(treeNode[i]->info);
+        // free(treeNode[i]);
+    }
+
+    free(treeNode);
 }

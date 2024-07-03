@@ -17,15 +17,15 @@ int main () {
 
     /** Organiza o vetor de arvore e o ordena com base nos pesos */
     Tree **vetorCaracteres = CriaVetorPorPeso(vetor);
-    int quant = RetornaQuantidadeCaracteres(vetor);
-    qsort(vetorCaracteres, quant, sizeof(Tree*),Compara); 
-    ImprimeVetor(vetorCaracteres, quant);
+    int qtd = RetornaQuantidadeCaracteres(vetor);
+    qsort(vetorCaracteres, qtd, sizeof(Tree*),Compara); 
+    ImprimeVetor(vetorCaracteres, qtd);
 
-    Tree *arvore = OrganizaArvorePorPesos(vetorCaracteres, quant, 0);
-    ImprimeArvore(arvore);
+    Tree *arvore = OrganizaArvorePorPesos(vetorCaracteres, qtd, 0);
+    // ImprimeArvore(arvore);
 
     LiberaArvore(arvore);
-    free(vetorCaracteres);
+    LiberaVetorArvores(vetorCaracteres, qtd);
     free(vetor);
 
     return 0;

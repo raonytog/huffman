@@ -35,5 +35,6 @@ rund:
 	./descompacta 
 
 valgrindd:
+	clear
 	gcc descompacta.c tree.c -o descompacta
 	valgrind --leak-check=full -s --track-origins=yes ./descompacta
