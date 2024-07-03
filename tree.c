@@ -101,20 +101,20 @@ Caracter *CriaCaracter(int letter, int peso){
 }
 
 Tree **CriaVetorPorPeso(int *vetor){
-   if (!vetor) return NULL;
+    if (!vetor) return NULL;
 
-   int quant = RetornaQuantidadeCaracteres(vetor);
-   Tree **CaracteresVetor = malloc(quant*(sizeof(Tree*)));
+    int quant = RetornaQuantidadeCaracteres(vetor);
+    Tree **CaracteresVetor = malloc(quant*(sizeof(Tree*)));
 
-   int cont = 0;
-   for(int i = 0; i<MAX; i++){
-        if(vetor[i]>0){
-           Caracter *letra = CriaCaracter(i, vetor[i]);
-           CaracteresVetor[cont] = malloc(sizeof(Tree));
-           CaracteresVetor[cont]->info = letra;
-           cont++;
-        }
-   }
+    int cont = 0;
+    for(int i = 0; i<MAX; i++){
+            if(vetor[i]>0){
+            Caracter *letra = CriaCaracter(i, vetor[i]);
+            CaracteresVetor[cont] = malloc(sizeof(Tree));
+            CaracteresVetor[cont]->info = letra;
+            cont++;
+            }
+    }
     return CaracteresVetor;
 }
 
@@ -174,10 +174,8 @@ void LiberaArvore(Tree *treeNode) {
     if (!treeNode) return;
 
     LiberaCaractere(treeNode->info);
-
     LiberaArvore(treeNode->direita);
     LiberaArvore(treeNode->esquerda);
-
     free(treeNode);
 }
 
