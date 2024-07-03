@@ -1,36 +1,36 @@
 all:
-	make enc
-	make dec
+	make comp
+#	make descomp
 
 ## Funcões de codificação: ##
 # compila os arquivos necessarios para codificar o arquivo.txt
-comp enc:
+comp:
 	clear
-	gcc compacta.c bitmap.c -o encode
+	gcc compacta.c tree.c -o comp
 
 # executa a codificacao do arquivo parametrizado
-enc:
-	make encode
-	./encode 
+comp run:
+	make comp
+	./comp 
 
 # compila e executa o valgrind do codificador
-val enc:
-	make enc
-	.valgrind --leak-check=full -s --track-origins=yes  ./encode
+val comp:
+	make comp
+	valgrind --leak-check=full -s --track-origins=yes  ./comp
 
 
-## Funcões de decodificação: ##
-# compila os arquivos necessarios para decodificar o arquivo.txt
-comp dec:
-	clear
-	gcc descompacta.c bitmap.c -o decode
+# ## Funcões de decodificação: ##
+# # compila os arquivos necessarios para decodificar o arquivo.txt
+# comp dec:
+# 	clear
+# 	gcc descompacta.c bitmap.c -o decode
 
-# executa a decodificação do arquivo parametrizado
-dec:
-	make dec
-	./decode 
+# # executa a decodificação do arquivo parametrizado
+# dec:
+# 	make dec
+# 	./decode 
 
-# compila e executa o valgrind do decodificador
-val dec:
-	make dec
-	.valgrind --leak-check=full -s --track-origins=yes  ./decode
+# # compila e executa o valgrind do decodificador
+# val dec:
+# 	make dec
+# 	.valgrind --leak-check=full -s --track-origins=yes  ./decode

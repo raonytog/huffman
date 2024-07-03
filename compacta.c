@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "tree.h"
+
 #define MAX_ASCI 256  //tamanho maximo do vetor com as qts de uso de cada letra
 #define MAX_TEXT 4096 // tamanho maximo do vetor q armazena o texto
 
@@ -21,6 +23,10 @@ int main () {
 
     Tree *arvore = OrganizaArvorePorPesos(vetorCaracteres, quant, 0);
     ImprimeArvore(arvore);
+
+    LiberaArvore(arvore);
+    free(vetorCaracteres);
+    free(vetor);
 
     return 0;
 }
