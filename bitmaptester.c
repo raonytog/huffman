@@ -1,10 +1,10 @@
-#include "bitmap.h"
+/*#include "bitmap.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(void) {
-	puts("teste"); /* prints  */
+/*int main(void) {
+	puts("teste"); 
 
 	bitmap* bm=bitmapInit(10);
 	printf("size=%d bits\n", bitmapGetMaxSize(bm));
@@ -31,7 +31,7 @@ int main(void) {
     
     bitmapLibera(bm);
     
-	puts("teste2");
+	//puts("teste2");
 	return EXIT_SUCCESS;
 
-}
+}*/
