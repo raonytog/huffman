@@ -9,6 +9,7 @@
 
 void PreencheVetor(int *vetor, char *text);
 
+
 int main () {
     /** Preenche e armazena o vetor dos caracteres e o texto completo */
     int *vetor = calloc(MAX_ASCI, sizeof(int));
@@ -25,11 +26,12 @@ int main () {
     // ImprimeArvore(arvore);
 
     LiberaArvore(arvore);
-    LiberaVetorArvores(vetorCaracteres, qtd);
+    free(vetorCaracteres);
     free(vetor);
 
     return 0;
 }
+
 
 void PreencheVetor(int *vetor, char *text) {
     if (!vetor || !text) return;

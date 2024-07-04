@@ -37,6 +37,4 @@ void LiberaArvore(Tree *treeNode);
 
 void LiberaCaractere(Caracter *caractereStruct);
 
-void LiberaVetorArvores(Tree **treeNode, int qtd);
-
 #endif

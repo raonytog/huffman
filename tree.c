@@ -188,9 +188,3 @@ void LiberaCaractere(Caracter *character) {
     if (!character) return;
     free(character);
 }
-
-void LiberaVetorArvores(Tree **treeNode, int qtd) {
-    if (!treeNode) return;
-
-    free(treeNode);
-}
