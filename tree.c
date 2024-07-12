@@ -8,7 +8,7 @@
 
  struct Caracter {
     int peso;
-    char letra;
+    unsigned char letra;
 };
 
 struct Tree{
@@ -17,12 +17,17 @@ struct Tree{
 };
 
 /** Funcoes de get */
-int RetornaPesoCaracter(Tree *arv){
+int RetornaPesoCaracter(Tree *arv) {
     if (!arv) return 0;
     return arv->info->peso;
 }
 
-int RetornaQuantidadeCaracteres(int *vetor){
+unsigned char RetornaCaractere(Tree *arv) {
+    if (!arv) return '\0';
+    return arv->info->letra;
+}
+
+int RetornaQtdCaracteres(int *vetor) {
     if(!vetor) return 0;
 
     int quant = 0;
@@ -94,7 +99,7 @@ Caracter *CriaCaracter(int letter, int peso){
     if(!peso) return NULL;
 
     Caracter *letra = malloc(sizeof(Caracter));
-    letra->letra = (char)letter;
+    letra->letra = (unsigned char)letter;
     letra->peso = peso;
 
     return letra;
@@ -103,7 +108,7 @@ Caracter *CriaCaracter(int letter, int peso){
 Tree **CriaVetorPorPeso(int *vetor){
     if (!vetor) return NULL;
 
-    int quant = RetornaQuantidadeCaracteres(vetor);
+    int quant = RetornaQtdCaracteres(vetor);
     Tree **CaracteresVetor = malloc(quant*(sizeof(Tree*)));
 
     int cont = 0;

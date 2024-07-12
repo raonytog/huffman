@@ -128,8 +128,7 @@ void bitmapAppendLeastSignificantBit(bitmap* bm, unsigned char bit) {
  * Libera a memória dinâmica alocada para o mapa de bits.
  * @param bm O mapa de bits.
  */
-void bitmapLibera (bitmap* bm){
-    
+void bitmapLibera (bitmap* bm) {
     free (bm->contents);
     free (bm);
 }

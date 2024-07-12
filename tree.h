@@ -8,7 +8,9 @@ typedef struct Tree Tree;
 
 int RetornaPesoCaracter(Tree *arv);
 
-int RetornaQuantidadeCaracteres(int *vetor);
+int RetornaQtdCaracteres(int *vetor);
+
+unsigned char RetornaCaractere(Tree *arv);
 
 /** Funcoes de ordenacao */
 
