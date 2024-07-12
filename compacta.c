@@ -61,7 +61,7 @@ void PreencheBitMap(bitmap *bm, Tree *arv, char *text) {
     if (!bm || !arv || !text) return;
 
     for (int i = 0; text[i] != '\0'; i++) {
-        bitmap *bits = BuscaBinaria(bm, arv, text[i]);
+        bitmap *bits = BuscaBinaria(NULL, arv, text[i]);
         if (bits) bitmapPrint(bits);
 
         for (int j = 0; j < bitmapGetLength(bits); j++) {

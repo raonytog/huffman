@@ -163,14 +163,13 @@ Tree *OrganizaArvorePorPesos(Tree** vetorCaracter, int elementos, int inicio) {
 
 bitmap *BuscaBinaria(bitmap *bm, Tree *arv, char c) {
     if (!arv) return NULL;
-
     // se achou
-    if (arv->info->letra == c) return bm;
+    if (arv->info->letra == c) return bitmapInit(256);
 
     // se esta na direita
     if (arv->direita) {
+        bm = BuscaBinaria(bm, arv->direita, c);;
         bitmapAppendLeastSignificantBit(bm, 1);
-        return BuscaBinaria(bm, arv->direita, c);;
     }
 
     // se esta na esquerda
