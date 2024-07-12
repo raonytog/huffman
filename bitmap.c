@@ -124,6 +124,15 @@ void bitmapAppendLeastSignificantBit(bitmap* bm, unsigned char bit) {
 	bitmapSetBit(bm, bm->length-1, bit);
 }
 
+void bitmapRemoveLeastSignificantBit(bitmap* bm) {
+    // Verificar se há pelo menos um bit no bitmap
+    if (bm->length > 0) {
+        // Decrementar o tamanho do bitmap para ignorar o último bit
+        bm->length--;
+    }
+}
+
+
 /**
  * Libera a memória dinâmica alocada para o mapa de bits.
  * @param bm O mapa de bits.
@@ -131,6 +140,12 @@ void bitmapAppendLeastSignificantBit(bitmap* bm, unsigned char bit) {
 void bitmapLibera (bitmap* bm) {
     free (bm->contents);
     free (bm);
+}
+
+void bitmapPrint(bitmap *bm) {
+	for (int i = 0; i < bitmapGetLength(bm); i++) {
+		printf("bit #%d = %0x\n", i, bitmapGetBit(bm, i));
+	}
 }
 
 

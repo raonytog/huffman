@@ -9,13 +9,14 @@
 #define MAX_TEXT 4096 // tamanho maximo do vetor q armazena o texto
 #define MEGA 1000000
 
-void PreencheVetor(int *vetor, char *text);
+void PreencheVetorTexto(int *vetor, char *text);
+void PreencheBitMap(bitmap *bm, Tree *arv, char *text);
 
 int main () {
     /** Preenche e armazena o vetor dos caracteres e o texto completo */
     int *vetor = calloc(MAX_ASCI, sizeof(int));
     char text[MAX_TEXT] = "\0";
-    PreencheVetor(vetor, text);
+    PreencheVetorTexto(vetor, text);
     printf("%s\n", text);
 
     /** Organiza o vetor de arvore e o ordena com base nos pesos */
@@ -24,20 +25,21 @@ int main () {
     qsort(vetorCaracteres, qtd, sizeof(Tree*),Compara); 
     ImprimeVetor(vetorCaracteres, qtd);
 
-
     Tree *arvore = OrganizaArvorePorPesos(vetorCaracteres, qtd, 0);
-    bitmap *map = bitmapInit(1000000);
-
     ImprimeArvore(arvore);
+    printf("\n");
 
-    bitmapLibera(map);
+    bitmap *bm = bitmapInit(1000000);
+    PreencheBitMap(bm, arvore, text);
+    bitmapPrint(bm);
+
     LiberaArvore(arvore);
     free(vetorCaracteres);
     free(vetor);
     return 0;
 }
 
-void PreencheVetor(int *vetor, char *text) {
+void PreencheVetorTexto(int *vetor, char *text) {
     if (!vetor || !text) return;
 
     char letra = '\0';      int idx = 0;
@@ -52,4 +54,19 @@ void PreencheVetor(int *vetor, char *text) {
 
     text[idx] = '\0';
     fclose(fText);
+}
+
+
+void PreencheBitMap(bitmap *bm, Tree *arv, char *text) {
+    if (!bm || !arv || !text) return;
+
+    for (int i = 0; text[i] != '\0'; i++) {
+        bitmap *bits = BuscaBinaria(bm, arv, text[i]);
+        if (bits) bitmapPrint(bits);
+
+        for (int j = 0; j < bitmapGetLength(bits); j++) {
+            unsigned char b = bitmapGetBit(bits, j);
+            bitmapAppendLeastSignificantBit(bm, b);
+        }
+    }
 }

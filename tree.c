@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include"tree.h"
+#include "tree.h"
 
 #define MAX 256
 
@@ -136,14 +136,6 @@ Tree *criaArvore(Tree *arvDir, Tree*arvEsq, Caracter *info){
     return temp;
 }
 
-void ImprimeVetor(Tree **vetor, int quant) {
-    if (!vetor) return;
-
-    for (int i = 0; i <quant; i++)
-        printf("%c: %d\n", vetor[i]->info->letra, vetor[i]->info->peso);
-    printf("\n");
-}
-
 Tree *OrganizaArvorePorPesos(Tree** vetorCaracter, int elementos, int inicio) {
     if(!vetorCaracter || (inicio + 1) == elementos) return NULL;
     
@@ -169,6 +161,37 @@ Tree *OrganizaArvorePorPesos(Tree** vetorCaracter, int elementos, int inicio) {
     return arvore;
 }
 
+bitmap *BuscaBinaria(bitmap *bm, Tree *arv, char c) {
+    if (!arv) return NULL;
+
+    // se achou
+    if (arv->info->letra == c) return bm;
+
+    // se esta na direita
+    if (arv->direita) {
+        bitmapAppendLeastSignificantBit(bm, 1);
+        return BuscaBinaria(bm, arv->direita, c);;
+    }
+
+    // se esta na esquerda
+    if (arv->esquerda) {
+        bitmapRemoveLeastSignificantBit(bm);
+        bitmapAppendLeastSignificantBit(bm, 0);
+        return BuscaBinaria(bm, arv->esquerda, c);
+    }
+
+    return NULL;
+}
+
+
+void ImprimeVetor(Tree **vetor, int quant) {
+    if (!vetor) return;
+
+    for (int i = 0; i <quant; i++)
+        printf("%c: %d\n", vetor[i]->info->letra, vetor[i]->info->peso);
+    printf("\n");
+}
+
 void ImprimeArvore(Tree *treeNode) {
     printf("<");
     if (treeNode) {
@@ -180,6 +203,7 @@ void ImprimeArvore(Tree *treeNode) {
     printf(">");
 }
 
+/** Funcoes de liberacao */
 void LiberaArvore(Tree *treeNode) {
     if (!treeNode) return;
 

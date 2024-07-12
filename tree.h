@@ -1,6 +1,8 @@
 #ifndef TREE_H_
 #define TREE_H_
 
+#include "bitmap.h"
+
 typedef struct Caracter Caracter;
 typedef struct Tree Tree;
 
@@ -29,9 +31,13 @@ Tree **CriaVetorPorPeso(int *vetor);
 
 Tree *OrganizaArvorePorPesos(Tree** vetorCaracter, int elementos, int inicio);
 
-void ImprimeVetor(Tree **vetor, int quant);
+bitmap *BuscaBinaria(bitmap *bm, Tree *arv, char c);
+
+void ImprimeVetorArvore(Tree **vetor, int quant);
 
 void ImprimeArvore(Tree *treeNode);
+
+void ImprimeVetor(Tree **vetor, int quant);
 
 /** Funcoes de liberacao */
 
