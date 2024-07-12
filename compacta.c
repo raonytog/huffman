@@ -10,28 +10,25 @@
 #define MEGA 1000000
 
 void PreencheVetor(int *vetor, char *text);
-void PreencheBitMap(bitmap *map, Tree **vetor, int qtd);
-
 
 int main () {
     /** Preenche e armazena o vetor dos caracteres e o texto completo */
     int *vetor = calloc(MAX_ASCI, sizeof(int));
     char text[MAX_TEXT] = "\0";
     PreencheVetor(vetor, text);
+    printf("%s\n", text);
 
     /** Organiza o vetor de arvore e o ordena com base nos pesos */
     Tree **vetorCaracteres = CriaVetorPorPeso(vetor);
     int qtd = RetornaQtdCaracteres(vetor);
     qsort(vetorCaracteres, qtd, sizeof(Tree*),Compara); 
-    // ImprimeVetor(vetorCaracteres, qtd);
+    ImprimeVetor(vetorCaracteres, qtd);
 
-    bitmap *map = bitmapInit(1000000);
-    PreencheBitMap(map, vetorCaracteres, qtd);
 
     Tree *arvore = OrganizaArvorePorPesos(vetorCaracteres, qtd, 0);
-    
+    bitmap *map = bitmapInit(1000000);
 
-    // ImprimeArvore(arvore);
+    ImprimeArvore(arvore);
 
     bitmapLibera(map);
     LiberaArvore(arvore);
@@ -55,29 +52,4 @@ void PreencheVetor(int *vetor, char *text) {
 
     text[idx] = '\0';
     fclose(fText);
-}
-
-void PreencheBitMap(bitmap *map, Tree **vetor, int qtd) {
-    if (!map || !vetor) return;
-
-    unsigned char letra = '\0';
-    for (int i = 0; i < qtd; i++) {
-        letra = RetornaCaractere(vetor[i]);
-
-        // Adiciona cada bit do caractere
-        for (int j = 7; j >= 0; j--) { 
-            // shift em j bits a direita e pega só o mais significativo
-            unsigned char bit = (letra >> j) & 0x01;
-            bitmapAppendLeastSignificantBit(map, bit);
-        }
-    }
-
-    unsigned char *bits = bitmapGetContents(map);
-
-    // Pode imprimir os bits em formato binário para visualização
-    for (int i = 0; i < bitmapGetLength(map); i++) {
-        printf("%d", bitmapGetBit(map, i));
-        if ((i+1)%3 == 0) printf(" ");
-    }
-    printf("\n");
 }
