@@ -29,4 +29,7 @@ void bitmapLibera(bitmap* bm);
 
 void bitmapPrint(bitmap *bm);
 
+bitmap **traslantionGuide(bitmap **mae, int index, bitmap *filha);
+
+void LiberaTabelaDeTraducao(bitmap **traducao, int quant);
 #endif /*BITMAP_H_*/

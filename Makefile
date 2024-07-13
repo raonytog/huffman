@@ -18,7 +18,7 @@ runc:
 
 # compila e executa o valgrind do codificador
 valgrindc:
-	gcc compacta.c tree.c -o compacta
+	gcc bitmap.c compacta.c tree.c -o compacta
 	valgrind --leak-check=full -s --track-origins=yes ./compacta
 
 

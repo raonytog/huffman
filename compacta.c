@@ -10,7 +10,7 @@
 #define MEGA 1000000
 
 void PreencheVetorTexto(int *vetor, char *text);
-void PreencheBitMap(bitmap *bm, Tree *arv, char *text);
+void PreencheBitMap(bitmap *bm, Tree *arv, char *text, char *vet, bitmap **tabela, int quant);
 
 int main () {
     /** Preenche e armazena o vetor dos caracteres e o texto completo */
@@ -22,20 +22,25 @@ int main () {
     /** Organiza o vetor de arvore e o ordena com base nos pesos */
     Tree **vetorCaracteres = CriaVetorPorPeso(vetor);
     int qtd = RetornaQtdCaracteres(vetor);
+    char *caracteresEmOrdem  = calloc(qtd,sizeof(char));
     qsort(vetorCaracteres, qtd, sizeof(Tree*),Compara); 
+    vetoresBase(caracteresEmOrdem, qtd, vetorCaracteres);
     ImprimeVetor(vetorCaracteres, qtd);
-
     Tree *arvore = OrganizaArvorePorPesos(vetorCaracteres, qtd, 0);
+    bitmap **traducao = tabelaTraducao(caracteresEmOrdem, arvore, qtd);
     ImprimeArvore(arvore);
     printf("\n");
 
     bitmap *bm = bitmapInit(1000000);
-    PreencheBitMap(bm, arvore, text);
+    PreencheBitMap(bm, arvore, text, caracteresEmOrdem, traducao, qtd);
     bitmapPrint(bm);
 
     LiberaArvore(arvore);
+    LiberaTabelaDeTraducao(traducao, qtd);
     free(vetorCaracteres);
     free(vetor);
+    free(caracteresEmOrdem);
+    bitmapLibera(bm);
     return 0;
 }
 
@@ -57,16 +62,17 @@ void PreencheVetorTexto(int *vetor, char *text) {
 }
 
 
-void PreencheBitMap(bitmap *bm, Tree *arv, char *text) {
+void PreencheBitMap(bitmap *bm, Tree *arv, char *text, char *vet, bitmap **tabela, int quant) {
     if (!bm || !arv || !text) return;
+    for (int i = 0; text[i] != '\0'; i++) {  
+       
+        int index = achaIndexCaracter(vet, text[i], quant);
 
-    for (int i = 0; text[i] != '\0'; i++) {
-        bitmap *bits = BuscaBinaria(NULL, arv, text[i]);
-        if (bits) bitmapPrint(bits);
-
-        for (int j = 0; j < bitmapGetLength(bits); j++) {
-            unsigned char b = bitmapGetBit(bits, j);
+        for (int j = 0; j < bitmapGetLength(tabela[index]); j++) {
+            unsigned char b = bitmapGetBit(tabela[index], j);
             bitmapAppendLeastSignificantBit(bm, b);
         }
+        
+        
     }
 }

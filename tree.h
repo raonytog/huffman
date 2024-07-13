@@ -31,8 +31,12 @@ Tree **CriaVetorPorPeso(int *vetor);
 
 Tree *OrganizaArvorePorPesos(Tree** vetorCaracter, int elementos, int inicio);
 
-bitmap *BuscaBinaria(bitmap *bm, Tree *arv, char c);
+bitmap *BuscaBinaria(bitmap *bm, Tree *arv, char c, int *cont);
 
+bitmap *EsvaziaBitMap(bitmap *bm);
+
+bitmap **tabelaTraducao(char *letras, Tree *arv, int quant);
+void vetoresBase(char *letras, int quant, Tree **lista);
 void ImprimeVetorArvore(Tree **vetor, int quant);
 
 void ImprimeArvore(Tree *treeNode);
@@ -44,5 +48,7 @@ void ImprimeVetor(Tree **vetor, int quant);
 void LiberaArvore(Tree *treeNode);
 
 void LiberaCaractere(Caracter *caractereStruct);
+
+int achaIndexCaracter(char *letras, char procurada, int tam);
 
 #endif

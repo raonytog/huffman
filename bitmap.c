@@ -126,9 +126,18 @@ void bitmapAppendLeastSignificantBit(bitmap* bm, unsigned char bit) {
 
 void bitmapRemoveLeastSignificantBit(bitmap* bm) {
     // Verificar se há pelo menos um bit no bitmap
+	unsigned char bit = 0;
     if (bm->length > 0) {
-        // Decrementar o tamanho do bitmap para ignorar o último bit
-        bm->length--;
+    // Decrementar o tamanho do bitmap para ignorar o último bit
+	int byte_pos = bm->length / 8;
+    int bit_pos = bm->length % 8;
+
+    // Cria uma máscara para limpar o bit específico
+    unsigned char mask = ~(1 << (7 - bit_pos));
+
+    // Aplica a máscara ao byte correspondente
+    bm->contents[byte_pos] &= mask;
+    bm->length--;
     }
 }
 
@@ -148,4 +157,17 @@ void bitmapPrint(bitmap *bm) {
 	}
 }
 
+bitmap **traslantionGuide(bitmap **mae, int index, bitmap *filha){
+	if(!mae || !filha) return NULL;
+	mae[index] = filha;
+	return mae;
+	
+}
 
+void LiberaTabelaDeTraducao(bitmap **traducao, int quant){
+	if(!traducao) return;
+	for(int i = 0;i<quant;i++){
+		bitmapLibera(traducao[i]);
+	}
+	free(traducao);
+}

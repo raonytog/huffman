@@ -161,28 +161,71 @@ Tree *OrganizaArvorePorPesos(Tree** vetorCaracter, int elementos, int inicio) {
     return arvore;
 }
 
-bitmap *BuscaBinaria(bitmap *bm, Tree *arv, char c) {
+bitmap *BuscaBinaria(bitmap *bm, Tree *arv, char c, int *cont) {
     if (!arv) return NULL;
     // se achou
-    if (arv->info->letra == c) return bitmapInit(256);
+    if (arv->info->letra == c){
+        *(cont) = 1;
+        return bm;}
+    
+    if (arv->esquerda) {
+   
+        bitmapAppendLeastSignificantBit(bm, 0);
+        //printf("ADICONA 0: \n");
+        //bitmapPrint(bm);
+        bm = BuscaBinaria(bm, arv->esquerda, c, cont);
+        if(*(cont)) return bm;
+        //printf("REMOVE 0:\n");
+        bitmapRemoveLeastSignificantBit(bm);
+        //bitmapPrint(bm);
+    }
 
     // se esta na direita
     if (arv->direita) {
-        bm = BuscaBinaria(bm, arv->direita, c);;
+        //printf("ADICONA 1: \n");
         bitmapAppendLeastSignificantBit(bm, 1);
+        //bitmapPrint(bm);
+        bm = BuscaBinaria(bm, arv->direita, c, cont);
+        if(*(cont)) return bm;
+        //printf("REMOVE 1:\n");
+        bitmapRemoveLeastSignificantBit(bm);
+        //bitmapPrint(bm);
     }
 
     // se esta na esquerda
-    if (arv->esquerda) {
-        bitmapRemoveLeastSignificantBit(bm);
-        bitmapAppendLeastSignificantBit(bm, 0);
-        return BuscaBinaria(bm, arv->esquerda, c);
-    }
-
-    return NULL;
+    
+    return bm;
 }
 
-
+bitmap *EsvaziaBitMap(bitmap *bm){
+    if(!bm) return NULL;
+    while(bitmapGetLength(bm)>0){
+        bitmapRemoveLeastSignificantBit(bm);
+    }
+    return bm;
+}
+bitmap **tabelaTraducao(char *letras, Tree *arv, int quant){
+    if(!arv) return NULL;
+    bitmap **tabela = malloc(quant*sizeof(bitmap*));
+    bitmap *sosia = NULL;
+    int achou = 0;
+    for(int i = 0;i<quant;i++){
+        sosia = bitmapInit(256);
+        sosia = BuscaBinaria(sosia, arv, letras[i], &achou);
+        tabela = traslantionGuide(tabela, i, sosia);
+        printf("Caracter: %c\n", letras[i]);
+        bitmapPrint(sosia);
+        achou = 0;
+        
+    }
+    return tabela;
+}
+void vetoresBase(char *letras, int quant, Tree **lista){
+    if(!lista ||!quant) return;
+    for(int i = 0;i<quant;i++){
+        letras[i] = lista[i]->info->letra;
+    }
+}
 void ImprimeVetor(Tree **vetor, int quant) {
     if (!vetor) return;
 
@@ -215,4 +258,11 @@ void LiberaArvore(Tree *treeNode) {
 void LiberaCaractere(Caracter *character) {
     if (!character) return;
     free(character);
+}
+
+int achaIndexCaracter(char *letras, char procurada, int tam){
+    if(!letras) return -1;
+    for(int i = 0; i<tam;i++){
+        if(procurada == letras[i]) return i;
+    }
 }
