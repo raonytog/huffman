@@ -5,8 +5,8 @@
 #include "tree.h"
 #include "bitmap.h"
 
-#define MAX_ASCI 256  //tamanho maximo do vetor com as qts de uso de cada letra
-#define MAX_TEXT 4096 // tamanho maximo do vetor q armazena o texto
+#define MAX_ASCI 256  /** tamanho maximo do vetor com as qts de uso de cada letra */
+#define MAX_TEXT 4096 /** tamanho maximo do vetor q armazena o texto */
 #define MEGA 1000000
 
 void PreencheVetorTexto(int *vetor, char *text);
@@ -19,22 +19,40 @@ int main () {
     PreencheVetorTexto(vetor, text);
     printf("%s\n", text);
 
-    /** Organiza o vetor de arvore e o ordena com base nos pesos */
+    /** 
+     * Cria, preenche e ordena o vetor de com os caracteres, com base em quais foram
+     * mais utilizados durante a leitura do texto
+     */
     Tree **vetorCaracteres = CriaVetorPorPeso(vetor);
     int qtd = RetornaQtdCaracteres(vetor);
-    char *caracteresEmOrdem  = calloc(qtd,sizeof(char));
     qsort(vetorCaracteres, qtd, sizeof(Tree*),Compara); 
-    vetoresBase(caracteresEmOrdem, qtd, vetorCaracteres);
     ImprimeVetor(vetorCaracteres, qtd);
+
+    /** 
+     * Cria e preenche o vetor contendo apenas os caracteres 
+     * usados no texto
+     */
+    char *caracteresEmOrdem  = calloc(qtd,sizeof(char));
+    vetoresBase(caracteresEmOrdem, qtd, vetorCaracteres);
+
+    /**
+     * Organiza a arvore binaria de acordo com os criterios 
+     * da codificacao de huffman
+     */
     Tree *arvore = OrganizaArvorePorPesos(vetorCaracteres, qtd, 0);
-    bitmap **traducao = tabelaTraducao(caracteresEmOrdem, arvore, qtd);
     ImprimeArvore(arvore);
     printf("\n");
 
-    bitmap *bm = bitmapInit(1000000);
+
+    bitmap **traducao = tabelaTraducao(caracteresEmOrdem, arvore, qtd);
+
+    bitmap *bm = bitmapInit(MEGA);
     PreencheBitMap(bm, arvore, text, caracteresEmOrdem, traducao, qtd);
     bitmapPrint(bm);
 
+    /**
+     * Funcoes de liberacao 
+     */
     LiberaArvore(arvore);
     LiberaTabelaDeTraducao(traducao, qtd);
     free(vetorCaracteres);

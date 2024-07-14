@@ -60,17 +60,20 @@ unsigned int bitmapGetLength(bitmap* bm) {
  * @return O mapa de bits inicializado.
  */
 bitmap* bitmapInit(unsigned int max_size) {
-	bitmap* bm;
-    bm = (bitmap*)malloc(sizeof(bitmap));
+	bitmap* bm = (bitmap*)malloc(sizeof(bitmap));
 	// definir tamanho maximo em bytes, com arredondamento para cima
 	unsigned int max_sizeInBytes=(max_size+7)/8;
+
 	// alocar espaco de memoria para o tamanho maximo em bytes
 	bm->contents=calloc(max_sizeInBytes, sizeof(char));
+
 	// verificar alocacao de memoria
 	assert(bm->contents!=NULL, "Erro de alocacao de memoria.");
+
 	// definir valores iniciais para tamanho maximo e tamanho atual
 	bm->max_size=max_size;
 	bm->length=0;
+	
 	return bm;
 }
 
@@ -81,10 +84,10 @@ bitmap* bitmapInit(unsigned int max_size) {
  * @pre index<bitmapGetLength(bm)
  * @return O valor do bit.
  */
-unsigned char bitmapGetBit(bitmap* bm, unsigned int index) // index in bits
-{
+unsigned char bitmapGetBit(bitmap* bm, unsigned int index) { // index in bits
 	// verificar se index<bm.length, pois caso contrario, index e' invalido
 	assert(index<bm->length, "Acesso a posicao inexistente no mapa de bits.");
+
 	// index/8 e' o indice do byte que contem o bit em questao
 	// 7-(index%8) e' o deslocamento do bit em questao no byte
 	return (bm->contents[index/8] >> (7-(index%8))) & 0x01;
@@ -100,6 +103,7 @@ unsigned char bitmapGetBit(bitmap* bm, unsigned int index) // index in bits
 static void bitmapSetBit(bitmap* bm, unsigned int index, unsigned char bit) {
     // verificar se index<bm->length, pois caso contrario, index e' invalido
     assert(index<bm->length, "Acesso a posicao inexistente no mapa de bits.");
+
     // index/8 e' o indice do byte que contem o bit em questao
     // 7-(index%8) e' o deslocamento do bit em questao no byte
     bit=bit & 0x01;
@@ -119,6 +123,7 @@ static void bitmapSetBit(bitmap* bm, unsigned int index, unsigned char bit) {
 void bitmapAppendLeastSignificantBit(bitmap* bm, unsigned char bit) {
 	// verificar se bm->length<bm->max_size, caso contrario, o bitmap esta' cheio
 	assert(bm->length<bm->max_size, "Tamanho maximo excedido no mapa de bits.");
+
 	// como um bit sera' adicionado, devemos incrementar o tamanho do mapa de bits
 	bm->length++;
 	bitmapSetBit(bm, bm->length-1, bit);
@@ -126,18 +131,17 @@ void bitmapAppendLeastSignificantBit(bitmap* bm, unsigned char bit) {
 
 void bitmapRemoveLeastSignificantBit(bitmap* bm) {
     // Verificar se há pelo menos um bit no bitmap
-	unsigned char bit = 0;
     if (bm->length > 0) {
-    // Decrementar o tamanho do bitmap para ignorar o último bit
-	int byte_pos = bm->length / 8;
-    int bit_pos = bm->length % 8;
+		// Decrementar o tamanho do bitmap para ignorar o último bit
+		int byte_pos = bm->length / 8;
+		int bit_pos = bm->length % 8;
 
-    // Cria uma máscara para limpar o bit específico
-    unsigned char mask = ~(1 << (7 - bit_pos));
+		// Cria uma máscara para limpar o bit específico
+		unsigned char mask = ~(1 << (7 - bit_pos));
 
-    // Aplica a máscara ao byte correspondente
-    bm->contents[byte_pos] &= mask;
-    bm->length--;
+		// Aplica a máscara ao byte correspondente
+		bm->contents[byte_pos] &= mask;
+		bm->length--;
     }
 }
 
@@ -153,8 +157,10 @@ void bitmapLibera (bitmap* bm) {
 
 void bitmapPrint(bitmap *bm) {
 	for (int i = 0; i < bitmapGetLength(bm); i++) {
-		printf("bit #%d = %0x\n", i, bitmapGetBit(bm, i));
+		// printf("bit #%d = %0x\n", i, bitmapGetBit(bm, i));
+		printf("%0x", bitmapGetBit(bm, i));
 	}
+	printf("\n");
 }
 
 bitmap **traslantionGuide(bitmap **mae, int index, bitmap *filha){
@@ -170,4 +176,14 @@ void LiberaTabelaDeTraducao(bitmap **traducao, int quant){
 		bitmapLibera(traducao[i]);
 	}
 	free(traducao);
+}
+
+bitmap *EsvaziaBitMap(bitmap *bm){
+    if(!bm) return NULL;
+
+    while(bitmapGetLength(bm)>0){
+        bitmapRemoveLeastSignificantBit(bm);
+    }
+
+    return bm;
 }
