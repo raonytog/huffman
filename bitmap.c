@@ -10,9 +10,9 @@
 #include "bitmap.h"
 
 struct map {
-    unsigned int max_size;        ///< tamanho maximo em bits
-    unsigned int length;         ///< tamanho atual em bits
-    unsigned char* contents;     ///< conteudo do mapa de bits
+    unsigned int max_size;		///< tamanho maximo em bits
+    unsigned int length;		///< tamanho atual em bits
+    unsigned char* contents;	///< conteudo do mapa de bits
 };
 
 /**
@@ -160,30 +160,43 @@ void bitmapPrint(bitmap *bm) {
 		// printf("bit #%d = %0x\n", i, bitmapGetBit(bm, i));
 		printf("%0x", bitmapGetBit(bm, i));
 	}
+	
 	printf("\n");
 }
 
-bitmap **traslantionGuide(bitmap **mae, int index, bitmap *filha){
+bitmap **traslantionGuide(bitmap **mae, int index, bitmap *filha) {
 	if(!mae || !filha) return NULL;
+
 	mae[index] = filha;
+
 	return mae;
-	
 }
 
-void LiberaTabelaDeTraducao(bitmap **traducao, int quant){
+void LiberaTabelaDeTraducao(bitmap **traducao, int quant) {
 	if(!traducao) return;
-	for(int i = 0;i<quant;i++){
+
+	for(int i = 0; i < quant; i++){
 		bitmapLibera(traducao[i]);
 	}
+
 	free(traducao);
 }
 
 bitmap *EsvaziaBitMap(bitmap *bm){
     if(!bm) return NULL;
 
-    while(bitmapGetLength(bm)>0){
+    while(bitmapGetLength(bm) > 0){
         bitmapRemoveLeastSignificantBit(bm);
     }
 
     return bm;
+}
+
+void ImprimeBitmapArquivo(bitmap *bm, FILE *fCompactado) {
+	if (!bm || !fCompactado) return;
+
+	for (int i = 0; i < bitmapGetLength(bm); i++) {
+		unsigned char bit = bitmapGetBit(bm, i);
+		fwrite(&bit, sizeof(unsigned char), 1, fCompactado);
+	}
 }

@@ -243,6 +243,22 @@ void ImprimeArvore(Tree *treeNode) {
     printf(">");
 }
 
+void ImprimeArvoreArquivo(Tree *tree, FILE *fCompactado) {
+    if (!tree || !fCompactado) return;
+
+    if (!tree->direita && !tree->esquerda) printf("L");
+    else printf("N");
+
+    printf("<");
+    if (tree->info->letra == '\0') printf("%d", tree->info->peso);
+    else printf("%d,%c", tree->info->peso, tree->info->letra);
+
+    ImprimeArvoreArquivo(tree->esquerda, fCompactado);
+    ImprimeArvoreArquivo(tree->direita, fCompactado);
+    printf(">");
+
+}
+
 /** Funcoes de liberacao */
 void LiberaArvore(Tree *treeNode) {
     if (!treeNode) return;

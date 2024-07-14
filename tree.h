@@ -56,6 +56,8 @@ void ImprimeVetorArvore(Tree **vetor, int quant);
 
 void ImprimeArvore(Tree *treeNode);
 
+void ImprimeArvoreArquivo(Tree *tree, FILE *fCompactado);
+
 void ImprimeVetor(Tree **vetor, int quant);
 
 /** 

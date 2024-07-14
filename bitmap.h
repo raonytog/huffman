@@ -23,9 +23,13 @@ unsigned char bitmapGetBit(bitmap* bm, unsigned int index);
 
 void bitmapAppendLeastSignificantBit(bitmap* bm, unsigned char bit);
 
-void bitmapRemoveLeastSignificantBit(bitmap* bm);
-
 void bitmapLibera(bitmap* bm);
+
+/**
+ * Funcoes implementadas para o TAD
+ */
+
+void bitmapRemoveLeastSignificantBit(bitmap* bm);
 
 void bitmapPrint(bitmap *bm);
 
@@ -34,5 +38,7 @@ bitmap **traslantionGuide(bitmap **mae, int index, bitmap *filha);
 void LiberaTabelaDeTraducao(bitmap **traducao, int quant);
 
 bitmap *EsvaziaBitMap(bitmap *bm);
+
+void ImprimeBitmapArquivo(bitmap *bm, FILE *fCompactado);
 
 #endif /*BITMAP_H_*/

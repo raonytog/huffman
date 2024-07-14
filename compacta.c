@@ -11,6 +11,7 @@
 
 void PreencheVetorTexto(int *vetor, char *text);
 void PreencheBitMap(bitmap *bm, Tree *arv, char *text, char *vet, bitmap **tabela, int quant);
+void Compacta(Tree *arvore, bitmap *bm);
 
 int main () {
     /** Preenche e armazena o vetor dos caracteres e o texto completo */
@@ -51,7 +52,14 @@ int main () {
     PreencheBitMap(bm, arvore, text, caracteresEmOrdem, traducao, qtd);
     bitmapPrint(bm);
 
-
+    /**
+     * Compacta o arquivo de texto traduzido para um arquivo binario,
+     * que contem, em ordem:
+     * 1. A árvore;
+     * 2. O tamanho do mapa de bits
+     * 3. O mapa de bits
+     */
+    Compacta(arvore, bm);
 
     /**
      * Funcoes de liberacao 
@@ -62,6 +70,7 @@ int main () {
     free(vetor);
     free(caracteresEmOrdem);
     bitmapLibera(bm);
+
     return 0;
 }
 
@@ -95,4 +104,28 @@ void PreencheBitMap(bitmap *bm, Tree *arv, char *text, char *vet, bitmap **tabel
         
         
     }
+}
+
+void Compacta(Tree *arvore, bitmap *bm) {
+    if (!arvore || !bm) return;
+
+    FILE *fCompacto = NULL;
+    fCompacto = fopen("texto.txt.comp", "wb");
+    if (fCompacto == NULL) {
+        printf("Erro ao criar o arquivo binario compactado\n");
+        exit(EXIT_FAILURE);
+    }
+
+    /** Escreve a string da arvore no binario */
+    ImprimeArvoreArquivo(arvore, fCompacto);
+    printf("\n");
+
+    /* Escreve o tamanho do bitmap com um espaco a mais para o \0 */
+    int bitmapSize = bitmapGetLength(bm)+1;
+    fwrite(&bitmapSize, sizeof(int), 1, fCompacto);
+
+    /** Escreve o bitmap no binario */
+    ImprimeBitmapArquivo(bm, fCompacto);
+
+    fclose(fCompacto);
 }
