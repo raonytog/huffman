@@ -43,12 +43,15 @@ int main () {
     ImprimeArvore(arvore);
     printf("\n");
 
-
+    /**
+     * Cria e preeche o mapa de bits com o texto codificado
+     */
     bitmap **traducao = tabelaTraducao(caracteresEmOrdem, arvore, qtd);
-
     bitmap *bm = bitmapInit(MEGA);
     PreencheBitMap(bm, arvore, text, caracteresEmOrdem, traducao, qtd);
     bitmapPrint(bm);
+
+
 
     /**
      * Funcoes de liberacao 
@@ -78,7 +81,6 @@ void PreencheVetorTexto(int *vetor, char *text) {
     text[idx] = '\0';
     fclose(fText);
 }
-
 
 void PreencheBitMap(bitmap *bm, Tree *arv, char *text, char *vet, bitmap **tabela, int quant) {
     if (!bm || !arv || !text) return;
