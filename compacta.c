@@ -18,7 +18,7 @@ int main () {
     int *vetor = calloc(MAX_ASCI, sizeof(int));
     char text[MAX_TEXT] = "\0";
     PreencheVetorTexto(vetor, text);
-    printf("%s\n", text);
+    // printf("%s\n", text);
 
     /** 
      * Cria, preenche e ordena o vetor de com os caracteres, com base em quais foram
@@ -27,7 +27,7 @@ int main () {
     Tree **vetorCaracteres = CriaVetorPorPeso(vetor);
     int qtd = RetornaQtdCaracteres(vetor);
     qsort(vetorCaracteres, qtd, sizeof(Tree*),Compara); 
-    ImprimeVetor(vetorCaracteres, qtd);
+    // ImprimeVetor(vetorCaracteres, qtd);
 
     /** 
      * Cria e preenche o vetor contendo apenas os caracteres 
@@ -41,8 +41,8 @@ int main () {
      * da codificacao de huffman
      */
     Tree *arvore = OrganizaArvorePorPesos(vetorCaracteres, qtd, 0);
-    ImprimeArvore(arvore);
-    printf("\n");
+    // ImprimeArvore(arvore);
+    // printf("\n");
 
     /**
      * Cria e preeche o mapa de bits com o texto codificado
@@ -50,7 +50,7 @@ int main () {
     bitmap **traducao = tabelaTraducao(caracteresEmOrdem, arvore, qtd);
     bitmap *bm = bitmapInit(MEGA);
     PreencheBitMap(bm, arvore, text, caracteresEmOrdem, traducao, qtd);
-    bitmapPrint(bm);
+    // bitmapPrint(bm);
 
     /**
      * Compacta o arquivo de texto traduzido para um arquivo binario,
@@ -101,31 +101,29 @@ void PreencheBitMap(bitmap *bm, Tree *arv, char *text, char *vet, bitmap **tabel
             unsigned char b = bitmapGetBit(tabela[index], j);
             bitmapAppendLeastSignificantBit(bm, b);
         }
-        
-        
     }
 }
 
 void Compacta(Tree *arvore, bitmap *bm) {
     if (!arvore || !bm) return;
 
-    FILE *fCompacto = NULL;
-    fCompacto = fopen("texto.txt.comp", "wb");
-    if (fCompacto == NULL) {
+    FILE *fCompactado = NULL;
+    fCompactado = fopen("texto.txt.comp", "wb");
+    if (fCompactado == NULL) {
         printf("Erro ao criar o arquivo binario compactado\n");
         exit(EXIT_FAILURE);
     }
 
     /** Escreve a string da arvore no binario */
-    ImprimeArvoreArquivo(arvore, fCompacto);
-    printf("\n");
+    ImprimeArvoreArquivo(arvore, fCompactado);
+    fwrite("\0", sizeof(char), 1, fCompactado);
 
     /* Escreve o tamanho do bitmap com um espaco a mais para o \0 */
     int bitmapSize = bitmapGetLength(bm)+1;
-    fwrite(&bitmapSize, sizeof(int), 1, fCompacto);
+    fwrite(&bitmapSize, sizeof(int), 1, fCompactado);
 
     /** Escreve o bitmap no binario */
-    ImprimeBitmapArquivo(bm, fCompacto);
+    ImprimeBitmapArquivo(bm, fCompactado);
 
-    fclose(fCompacto);
+    fclose(fCompactado);
 }

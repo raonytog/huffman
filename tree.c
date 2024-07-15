@@ -209,8 +209,8 @@ bitmap **tabelaTraducao(char *letras, Tree *arv, int quant){
         sosia = bitmapInit(256);
         sosia = BuscaBinaria(sosia, arv, letras[i], &achou);
         tabela = traslantionGuide(tabela, i, sosia);
-        printf("Caracter: %c - ", letras[i]);
-        bitmapPrint(sosia);
+        // printf("Caracter: %c - ", letras[i]);
+        // bitmapPrint(sosia);
         achou = 0;
     }
 
@@ -246,17 +246,27 @@ void ImprimeArvore(Tree *treeNode) {
 void ImprimeArvoreArquivo(Tree *tree, FILE *fCompactado) {
     if (!tree || !fCompactado) return;
 
-    if (!tree->direita && !tree->esquerda) printf("L");
-    else printf("N");
+    // if (!tree->direita && !tree->esquerda) printf("L");
+    // else printf("N");
 
-    printf("<");
-    if (tree->info->letra == '\0') printf("%d", tree->info->peso);
-    else printf("%d,%c", tree->info->peso, tree->info->letra);
+    // printf("<");
+    // if (tree->info->letra == '\0') printf("%d", tree->info->peso);
+    // else printf("%d,%c", tree->info->peso, tree->info->letra);
+
+    // ImprimeArvoreArquivo(tree->esquerda, fCompactado);
+    // ImprimeArvoreArquivo(tree->direita, fCompactado);
+    // printf(">");
+
+    fwrite("<", sizeof(char), 1, fCompactado);
+    fwrite(&(tree->info->peso), sizeof(int), 1, fCompactado);
+    if (tree->info->letra != '\0') {
+        fwrite(",", sizeof(char), 1, fCompactado);
+        fwrite(&(tree->info->letra), sizeof(char), 1, fCompactado);
+    }
 
     ImprimeArvoreArquivo(tree->esquerda, fCompactado);
     ImprimeArvoreArquivo(tree->direita, fCompactado);
-    printf(">");
-
+    fwrite(">", sizeof(char), 1, fCompactado);
 }
 
 /** Funcoes de liberacao */
