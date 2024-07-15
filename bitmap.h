@@ -6,6 +6,8 @@
 #ifndef BITMAP_H_
 #define BITMAP_H_
 
+#include <stdio.h>
+
 /**
  * Estrutura para representar um mapa de bits.
  */

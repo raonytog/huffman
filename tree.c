@@ -41,8 +41,10 @@ int RetornaQtdCaracteres(int *vetor) {
 int achaIndexCaracter(char *letras, char procurada, int tam){
     if(!letras) return -1;
 
-    for(int i = 0; i<tam;i++)
-        if(procurada == letras[i]) return i;
+    for(int i = 0; i < tam;i++)
+        if (procurada == letras[i]) return i;
+
+    return -1;
 }
 
 /** Funcoes para ordenacao */

@@ -1,6 +1,10 @@
 {
   "files.associations": {
     "stdlib.h": "c",
-    "tree.h": "c"
+    "tree.h": "c",
+    "array": "c",
+    "string_view": "c",
+    "initializer_list": "c",
+    "utility": "c"
   }
 }
