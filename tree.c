@@ -119,7 +119,7 @@ Tree **CriaVetorPorPeso(int *vetor){
     if (!vetor) return NULL;
 
     int quant = RetornaQtdCaracteres(vetor);
-    Tree **CaracteresVetor = malloc(quant*(sizeof(Tree*)));
+    Tree **CaracteresVetor = malloc((quant+1)*(sizeof(Tree*)));
 
     int cont = 0;
     for(int i = 0; i < MAX; i++){
@@ -284,4 +284,15 @@ void LiberaArvore(Tree *treeNode) {
 void LiberaCaractere(Caracter *character) {
     if (!character) return;
     free(character);
+}
+
+Tree **AdicionaCodParada(Tree **arv, int quant){
+    if(!arv || !quant) return NULL;
+    arv[quant] = malloc(sizeof(Tree));
+    Caracter *nulo =  malloc(sizeof(Caracter));
+    nulo->letra = NULL;
+    nulo->peso = 1;
+    arv[quant]->info = nulo;
+    return arv;
+
 }

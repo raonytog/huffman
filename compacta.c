@@ -26,8 +26,10 @@ int main () {
      */
     Tree **vetorCaracteres = CriaVetorPorPeso(vetor);
     int qtd = RetornaQtdCaracteres(vetor);
+    vetorCaracteres = AdicionaCodParada(vetorCaracteres, qtd);
+    qtd++;
     qsort(vetorCaracteres, qtd, sizeof(Tree*),Compara); 
-    //ImprimeVetor(vetorCaracteres, qtd);
+    ImprimeVetor(vetorCaracteres, qtd);
 
     /** 
      * Cria e preenche o vetor contendo apenas os caracteres 
@@ -50,7 +52,7 @@ int main () {
     bitmap **traducao = tabelaTraducao(caracteresEmOrdem, arvore, qtd);
     bitmap *bm = bitmapInit(MEGA);
     PreencheBitMap(bm, arvore, text, caracteresEmOrdem, traducao, qtd);
-    //bitmapPrint(bm);
+    bitmapPrint(bm);
 
     /**
      * Compacta o arquivo de texto traduzido para um arquivo binario,

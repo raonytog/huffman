@@ -68,4 +68,7 @@ void LiberaArvore(Tree *treeNode);
 
 void LiberaCaractere(Caracter *caractereStruct);
 
+
+Tree **AdicionaCodParada(Tree **arv, int quant);
+
 #endif
