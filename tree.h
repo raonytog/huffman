@@ -71,4 +71,5 @@ void LiberaCaractere(Caracter *caractereStruct);
 
 Tree **AdicionaCodParada(Tree **arv, int quant);
 
+unsigned char *TransformaBinario(char c);
 #endif

@@ -104,6 +104,12 @@ void PreencheBitMap(bitmap *bm, Tree *arv, char *text, char *vet, bitmap **tabel
             bitmapAppendLeastSignificantBit(bm, b);
         }
     }
+      int index = achaIndexCaracter(vet, NULL, quant);
+      for (int j = 0; j < bitmapGetLength(tabela[index]); j++) {
+            unsigned char b = bitmapGetBit(tabela[index], j);
+            bitmapAppendLeastSignificantBit(bm, b);
+        }
+
 }
 
 void Compacta(Tree *arvore, bitmap *bm) {
