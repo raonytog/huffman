@@ -226,6 +226,13 @@ void vetoresBase(unsigned char *letras, int quant, Tree **lista){
         letras[i] = lista[i]->info->letra;
 }
 
+int IsLeaf(Tree *arv) {
+    if (!arv) return 0;
+
+    if (!arv->direita && !arv->esquerda) return 1;
+    return 0;
+}
+
 void ImprimeVetor(Tree **vetor, int quant) {
     if (!vetor) return;
 
@@ -249,6 +256,18 @@ void ImprimeArvore(Tree *treeNode) {
 void ImprimeArvoreArquivo(Tree *tree, FILE *fCompactado) {
     if (!tree || !fCompactado) return;
 
+    if (IsLeaf(tree)) {
+        printf("1");
+        unsigned char *byte = CharToByte(tree->info->letra);
+        printf(" ");
+        for(int i=0;i<8;i++) 
+            printf("%c", byte[i]);
+        printf(" ");
+
+    } else printf("0");
+
+    ImprimeArvoreArquivo(tree->esquerda, fCompactado);
+    ImprimeArvoreArquivo(tree->direita, fCompactado);
 
 
     // fwrite(&(tree->info->peso), sizeof(int), 1, fCompactado);
@@ -304,9 +323,9 @@ unsigned char *CharToByte(unsigned char c) {
     }
 
     // Imprime o resultado
-    for (int i = 0; i < 8; i++) 
-        printf("%c", convertido[i]);
-    printf("\n");
+    // for (int i = 0; i < 8; i++) 
+    //     printf("%c", convertido[i]);
+    // printf("\n");
 
     return convertido;
 }

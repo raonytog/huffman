@@ -48,6 +48,8 @@ bitmap **tabelaTraducao(unsigned char *letras, Tree *arv, int quant);
 
 void vetoresBase(unsigned char *letras, int quant, Tree **lista);
 
+int IsLeaf(Tree *arv);
+
 Tree **AdicionaCodParada(Tree **arv, int quant);
 
 unsigned char *CharToByte(unsigned char c);

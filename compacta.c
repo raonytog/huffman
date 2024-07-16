@@ -114,7 +114,6 @@ void PreencheBitMap(bitmap *bm, Tree *arv, char *text, char *vet, bitmap **tabel
             unsigned char b = bitmapGetBit(tabela[index], j);
             bitmapAppendLeastSignificantBit(bm, b);
         }
-
 }
 
 void Compacta(Tree *arvore, bitmap *bm) {
@@ -128,7 +127,7 @@ void Compacta(Tree *arvore, bitmap *bm) {
     }
 
     /** Escreve a string da arvore no binario */
-    // ImprimeArvoreArquivo(arvore, fCompactado);
+    ImprimeArvoreArquivo(arvore, fCompactado);
     // fwrite("\0", sizeof(char), 1, fCompactado);
 
     /* Escreve o tamanho do bitmap */
