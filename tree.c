@@ -39,7 +39,7 @@ int RetornaQtdCaracteres(int *vetor) {
     return quant;
 }
 
-int achaIndexCaracter(char *letras, char procurada, int tam){
+int achaIndexCaracter(unsigned char *letras, unsigned char procurada, int tam){
     if(!letras) return -1;
 
     for(int i = 0; i < tam;i++)
@@ -174,7 +174,7 @@ Tree *OrganizaArvorePorPesos(Tree** vetorCaracter, int elementos, int inicio) {
     return arvore;
 }
 
-bitmap *BuscaBinaria(bitmap *bm, Tree *arv, char c, int *cont) {
+bitmap *BuscaBinaria(bitmap *bm, Tree *arv, unsigned char c, int *cont) {
     if (!arv) return NULL;
     
     // se achou
@@ -201,7 +201,7 @@ bitmap *BuscaBinaria(bitmap *bm, Tree *arv, char c, int *cont) {
     return bm;
 }
 
-bitmap **tabelaTraducao(char *letras, Tree *arv, int quant){
+bitmap **tabelaTraducao(unsigned char *letras, Tree *arv, int quant){
     if(!arv) return NULL;
 
     bitmap **tabela = malloc(quant*sizeof(bitmap*));
@@ -219,7 +219,7 @@ bitmap **tabelaTraducao(char *letras, Tree *arv, int quant){
 
     return tabela;
 }
-void vetoresBase(char *letras, int quant, Tree **lista){
+void vetoresBase(unsigned char *letras, int quant, Tree **lista){
     if(!lista || !quant) return;
 
     for(int i = 0;i<quant;i++)
@@ -281,7 +281,7 @@ Tree **AdicionaCodParada(Tree **arv, int quant){
     if(!arv || !quant) return NULL;
     arv[quant] = malloc(sizeof(Tree));
     Caracter *nulo =  malloc(sizeof(Caracter));
-    nulo->letra = NULL;
+    nulo->letra = '^';
     nulo->peso = 1;
     arv[quant]->info = nulo;
     return arv;

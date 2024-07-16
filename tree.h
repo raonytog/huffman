@@ -16,7 +16,7 @@ int RetornaQtdCaracteres(int *vetor);
 
 unsigned char RetornaCaractere(Tree *arv);
 
-int achaIndexCaracter(char *letras, char procurada, int tam);
+int achaIndexCaracter(unsigned char *letras, unsigned char procurada, int tam);
 
 /** 
  * Funcoes de ordenacao 
@@ -40,13 +40,13 @@ Tree **CriaVetorPorPeso(int *vetor);
 
 Tree *OrganizaArvorePorPesos(Tree** vetorCaracter, int elementos, int inicio);
 
-bitmap *BuscaBinaria(bitmap *bm, Tree *arv, char c, int *cont);
+bitmap *BuscaBinaria(bitmap *bm, Tree *arv, unsigned char c, int *cont);
 
 bitmap *EsvaziaBitMap(bitmap *bm);
 
-bitmap **tabelaTraducao(char *letras, Tree *arv, int quant);
+bitmap **tabelaTraducao(unsigned char *letras, Tree *arv, int quant);
 
-void vetoresBase(char *letras, int quant, Tree **lista);
+void vetoresBase(unsigned char *letras, int quant, Tree **lista);
 
 Tree **AdicionaCodParada(Tree **arv, int quant);
 
