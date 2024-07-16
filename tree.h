@@ -48,6 +48,12 @@ bitmap **tabelaTraducao(char *letras, Tree *arv, int quant);
 
 void vetoresBase(char *letras, int quant, Tree **lista);
 
+Tree **AdicionaCodParada(Tree **arv, int quant);
+
+unsigned char *CharToByte(unsigned char c);
+
+unsigned char ByteToChar(unsigned char *byte);
+
 /**
  * Funcoes de impressao
  */
@@ -69,7 +75,5 @@ void LiberaArvore(Tree *treeNode);
 void LiberaCaractere(Caracter *caractereStruct);
 
 
-Tree **AdicionaCodParada(Tree **arv, int quant);
 
-unsigned char *TransformaBinario(char c);
 #endif

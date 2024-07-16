@@ -9,7 +9,8 @@
         "-g",
         "*.c",
         "-o",
-        "${fileDirname}/bin/${fileBasenameNoExtension}"
+        "${fileDirname}/bin/${fileBasenameNoExtension}",
+        "-lm"
       ],
       "options": {
         "cwd": "${fileDirname}"

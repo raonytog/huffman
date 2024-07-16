@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include "tree.h"
 
@@ -287,36 +288,37 @@ Tree **AdicionaCodParada(Tree **arv, int quant){
 
 }
 
-/*unsigned char *TransformaBinario(char c){
-    int num = c;
-    unsigned char convertido[8];
-    int validos[8] = {-1,-1,-1,-1,-1,-1,-1,-1};
+unsigned char *CharToByte(unsigned char c) {
+    int num = (int)c;
+    unsigned char *convertido = malloc(8 * sizeof(unsigned char));
+
+    if (convertido == NULL) {
+        printf("Erro de alocação de memória\n");
+        return NULL;
+    }
+
+    // Calcula o número em binário
+    for (int i = 7; i >= 0; i--) {
+        convertido[i] = (num % 2) + '0'; // Convertendo para '0' ou '1'
+        num /= 2;
+    }
+
+    // Imprime o resultado
+    for (int i = 0; i < 8; i++) 
+        printf("%c", convertido[i]);
+    printf("\n");
+
+    return convertido;
+}
+
+unsigned char ByteToChar(unsigned char *byte) {
+    unsigned char c = 0;
     
-    num = num/2;
-    40/2 = 20
-    20/2 = 10
-    10/2 = 5 
-    5/2 = 2
-    1/2 = 0
+    for (int i = 0; i < 8; i++) {
+        if (byte[i] == '1') {
+            c += pow(2, 7 - i);
+        }
+    }
 
-    00101
-    10100
-
-    23/2 = 11
-    11/2 = 5 
-    5/2 = 2 
-    2/2 = 1
-    1/2 = 0
-
-
-
-    10100-
-    63/2 = 31
-    31/2 = 15
-    15/2 = 7
-    7/2 = 3 
-    3/2 = 1
-    1/2 = 1
-
-    111111
-}*/
+    return c;
+}

@@ -7,7 +7,7 @@
 
 #define MAX_ASCI 256  /** tamanho maximo do vetor com as qts de uso de cada letra */
 #define MAX_TEXT 4096 /** tamanho maximo do vetor q armazena o texto */
-#define MEGA 1000000
+#define MEGA 4000000
 
 void PreencheVetorTexto(int *vetor, char *text);
 void PreencheBitMap(bitmap *bm, Tree *arv, char *text, char *vet, bitmap **tabela, int quant);
@@ -62,6 +62,11 @@ int main () {
      * 3. O mapa de bits
      */
     Compacta(arvore, bm);
+
+    // unsigned char *byte = CharToByte('=');
+    // unsigned char letra = ByteToChar(byte);
+    // printf("letra: %c\n", letra);
+
 
     /**
      * Funcoes de liberacao 
