@@ -245,8 +245,8 @@ void ImprimeVetor(Tree **vetor, int quant) {
 void ImprimeArvore(Tree *treeNode) {
     printf("<");
     if (treeNode) {
-        if (treeNode->info->letra == '\0') printf("%d", treeNode->info->peso);
-        else printf("%c", treeNode->info->letra);
+        if (treeNode->info->letra != '\0') 
+        printf("%c", treeNode->info->letra);
         ImprimeArvore(treeNode->esquerda);
         ImprimeArvore(treeNode->direita);
     }
@@ -255,16 +255,20 @@ void ImprimeArvore(Tree *treeNode) {
 
 void ImprimeArvoreArquivo(Tree *tree, FILE *fCompactado) {
     if (!tree || !fCompactado) return;
-
+    char um = '1', zero = '0';
     if (IsLeaf(tree)) {
         printf("1");
+        fwrite(&um, sizeof(char), 1, fCompactado);
         unsigned char *byte = CharToByte(tree->info->letra);
         printf(" ");
+        fwrite(byte,sizeof(unsigned char), strlen(byte), fCompactado);
         for(int i=0;i<8;i++) 
             printf("%c", byte[i]);
         printf(" ");
 
-    } else printf("0");
+    } else{
+        fwrite(&zero, sizeof(char), 1, fCompactado);
+        printf("0");} 
 
     ImprimeArvoreArquivo(tree->esquerda, fCompactado);
     ImprimeArvoreArquivo(tree->direita, fCompactado);
@@ -340,4 +344,25 @@ unsigned char ByteToChar(unsigned char *byte) {
     }
 
     return c;
+}
+
+Tree *RecuperaArvore(FILE *compactado, Tree *arv){
+    if(!compactado) return NULL;
+    Tree *temp = malloc(sizeof(Tree));
+    char doc = '0';
+    fread(&doc, sizeof(char),1,compactado);
+    if(doc == '0'){
+            temp->info = CriaCaracter('\0',-1);
+            temp->esquerda = RecuperaArvore(compactado,temp->esquerda);
+            temp->direita = RecuperaArvore(compactado,temp->direita);
+        }
+    else if(doc == '1')
+        {   unsigned char letra[8];
+            fread(&letra, sizeof(unsigned char),8,compactado);
+            temp->info = CriaCaracter(ByteToChar(letra), -1);
+            return temp;
+        } 
+    return temp;
+
+
 }

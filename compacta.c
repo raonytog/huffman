@@ -107,6 +107,8 @@ void PreencheVetorTexto(int *vetor, char *text) {
         idx++;
     }
     letra = '\0';
+    fclose(fText);
+
 }
 
 void PreencheBitMap(bitmap *bm, Tree *arv, char *text, char *vet, bitmap **tabela, int quant) {
@@ -139,7 +141,7 @@ void Compacta(Tree *arvore, bitmap *bm) {
 
     /** Escreve a string da arvore no binario */
     ImprimeArvoreArquivo(arvore, fCompactado);
-    // fwrite("\0", sizeof(char), 1, fCompactado);
+    fwrite("\n", sizeof(char), 1, fCompactado);
 
     /* Escreve o tamanho do bitmap */
     unsigned int bitmapSize = bitmapGetLength(bm);

@@ -76,6 +76,6 @@ void LiberaArvore(Tree *treeNode);
 
 void LiberaCaractere(Caracter *caractereStruct);
 
-
+Tree *RecuperaArvore(FILE *compactado, Tree *arv);
 
 #endif
