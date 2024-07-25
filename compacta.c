@@ -82,20 +82,31 @@ int main () {
 }
 
 void PreencheVetorTexto(int *vetor, char *text) {
+    // if (!vetor || !text) return;
+
+    // char letra = '\0';      int idx = 0;
+    // FILE *fText = fopen("texto.txt", "r");
+    // while ( !feof(fText) ) {
+    //     letra = '\0';
+    //     if (fscanf(fText, "%c", &letra) == 1) 
+    //         vetor[letra]++;
+    //         text[idx] = letra;
+    //         idx++;
+    // }
+
+    // text[idx] = '\0';
+    // fclose(fText);
+
     if (!vetor || !text) return;
 
-    char letra = '\0';      int idx = 0;
-    FILE *fText = fopen("texto.txt", "r");
-    while ( !feof(fText) ) {
-        letra = '\0';
-        if (fscanf(fText, "%c", &letra) == 1) 
-            vetor[letra]++;
-            text[idx] = letra;
-            idx++;
+    unsigned char letra = '\0';  int idx = 0;
+    FILE *fText = fopen("texto.txt", "rb");
+    while (fread(&letra, sizeof( unsigned char), 1, fText) == 1) {
+        vetor[letra]++;
+        text[idx] = letra;
+        idx++;
     }
-
-    text[idx] = '\0';
-    fclose(fText);
+    letra = '\0';
 }
 
 void PreencheBitMap(bitmap *bm, Tree *arv, char *text, char *vet, bitmap **tabela, int quant) {
