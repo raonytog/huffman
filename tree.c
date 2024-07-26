@@ -253,36 +253,22 @@ void ImprimeArvore(Tree *treeNode) {
     printf(">");
 }
 
-void ImprimeArvoreArquivo(Tree *tree, FILE *fCompactado) {
+bitmap *ImprimeArvoreArquivo(Tree *tree, FILE *fCompactado, bitmap *arvBit) {
     if (!tree || !fCompactado) return;
-    char um = '1', zero = '0';
     if (IsLeaf(tree)) {
-        printf("1");
-        fwrite(&um, sizeof(char), 1, fCompactado);
+        bitmapAppendLeastSignificantBit(arvBit, '1');
         unsigned char *byte = CharToByte(tree->info->letra);
-        printf(" ");
-        fwrite(byte,sizeof(unsigned char), strlen(byte), fCompactado);
-        for(int i=0;i<8;i++) 
+        for(int i=0;i<8;i++){
             printf("%c", byte[i]);
-        printf(" ");
-
+            bitmapAppendLeastSignificantBit(arvBit, byte[i]);}
+       
     } else{
-        fwrite(&zero, sizeof(char), 1, fCompactado);
-        printf("0");} 
+        bitmapAppendLeastSignificantBit(arvBit, '0');
+        } 
 
-    ImprimeArvoreArquivo(tree->esquerda, fCompactado);
-    ImprimeArvoreArquivo(tree->direita, fCompactado);
+    ImprimeArvoreArquivo(tree->esquerda, fCompactado, arvBit);
+    ImprimeArvoreArquivo(tree->direita, fCompactado,  arvBit);
 
-
-    // fwrite(&(tree->info->peso), sizeof(int), 1, fCompactado);
-    // if (tree->info->letra != '\0') {
-    //     fwrite(",", sizeof(char), 1, fCompactado);
-    //     fwrite(&(tree->info->letra), sizeof(char), 1, fCompactado);
-    // }
-
-    // ImprimeArvoreArquivo(tree->esquerda, fCompactado);
-    // ImprimeArvoreArquivo(tree->direita, fCompactado);
-    // fwrite(">", sizeof(char), 1, fCompactado);
 }
 
 /** Funcoes de liberacao */
@@ -346,23 +332,32 @@ unsigned char ByteToChar(unsigned char *byte) {
     return c;
 }
 
-Tree *RecuperaArvore(FILE *compactado, Tree *arv){
+Tree *RecuperaArvore(FILE *compactado, Tree *arv, unsigned char *texto, bitmap *bits){
     if(!compactado) return NULL;
     Tree *temp = malloc(sizeof(Tree));
-    char doc = '0';
-    fread(&doc, sizeof(char),1,compactado);
-    if(doc == '0'){
+    short int tamBits = 0;
+    fread(&tamBits,sizeof(short int), 1, compactado);
+    for(short int i = 0;i<tamBits;i++){
+        fread(&texto[i], sizeof(unsigned char), 1, compactado);
+        printf("%c", texto[i]);
+    }
+
+
+}
+/*
+ if(!compactado) return NULL;
+    Tree *temp = malloc(sizeof(Tree));
+    unsigned int i = bitmapGetLength(bits);
+    //fread(&bits, sizeof(bitmap),1,compactado);
+    /*if(texto[bitmapGetLength(bits)] == '0'){
             temp->info = CriaCaracter('\0',-1);
-            temp->esquerda = RecuperaArvore(compactado,temp->esquerda);
-            temp->direita = RecuperaArvore(compactado,temp->direita);
+            temp->esquerda = RecuperaArvore(compactado,temp->esquerda, texto, bits);
+            temp->direita = RecuperaArvore(compactado,temp->direita,texto, bits);
         }
-    else if(doc == '1')
+    else if(texto[bitmapGetLength(bits)] == '1')
         {   unsigned char letra[8];
             fread(&letra, sizeof(unsigned char),8,compactado);
             temp->info = CriaCaracter(ByteToChar(letra), -1);
             return temp;
         } 
-    return temp;
-
-
-}
+    return temp;*/

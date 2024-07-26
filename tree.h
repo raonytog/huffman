@@ -64,7 +64,7 @@ void ImprimeVetorArvore(Tree **vetor, int quant);
 
 void ImprimeArvore(Tree *treeNode);
 
-void ImprimeArvoreArquivo(Tree *tree, FILE *fCompactado);
+bitmap *ImprimeArvoreArquivo(Tree *tree, FILE *fCompactado, bitmap *arvBit);
 
 void ImprimeVetor(Tree **vetor, int quant);
 
@@ -76,6 +76,6 @@ void LiberaArvore(Tree *treeNode);
 
 void LiberaCaractere(Caracter *caractereStruct);
 
-Tree *RecuperaArvore(FILE *compactado, Tree *arv);
+Tree *RecuperaArvore(FILE *compactado, Tree *arv, unsigned char *texto, bitmap *bits);
 
 #endif

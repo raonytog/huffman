@@ -140,12 +140,14 @@ void Compacta(Tree *arvore, bitmap *bm) {
     }
 
     /** Escreve a string da arvore no binario */
-    ImprimeArvoreArquivo(arvore, fCompactado);
-    fwrite("\n", sizeof(char), 1, fCompactado);
+    bitmap *arvBit = bitmapInit(100000);
+  
+    ImprimeArvoreArquivo(arvore, fCompactado,arvBit);  
 
+    short int bitsArv = bitmapGetLength(arvBit);
+    fwrite(&bitsArv, sizeof(short int), 1, fCompactado);
+    ImprimeBitmapArquivo(arvBit, fCompactado);
     /* Escreve o tamanho do bitmap */
-    unsigned int bitmapSize = bitmapGetLength(bm);
-    fwrite(&bitmapSize, sizeof(unsigned int), 1, fCompactado);
 
     /** Escreve o bitmap no binario */
     ImprimeBitmapArquivo(bm, fCompactado);

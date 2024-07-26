@@ -194,9 +194,7 @@ bitmap *EsvaziaBitMap(bitmap *bm){
 
 void ImprimeBitmapArquivo(bitmap *bm, FILE *fCompactado) {
 	if (!bm || !fCompactado) return;
-
-	for (int i = 0; i < bitmapGetLength(bm); i++) {
-		unsigned char bit = bitmapGetBit(bm, i);
-		fwrite(&bit, sizeof(unsigned char), 1, fCompactado);
-	}
+	unsigned char *texto = bitmapGetContents(bm);
+	short int parada = (bitmapGetLength(bm)/8)+1;
+	fwrite(texto, sizeof(unsigned char), parada, fCompactado);  
 }

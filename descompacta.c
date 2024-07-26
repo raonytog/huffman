@@ -21,7 +21,11 @@ int main () {
     }
 
     Tree *arvore = NULL;
-    arvore =  RecuperaArvore(fDescompactado, arvore);
+    bitmap *bits = bitmapInit(10000);
+    unsigned char *texto = bitmapGetContents(bits);
+    int short tamBits = 0;
+    //fread(&tamBits,sizeof(short int), 1, fDescompactado);
+    arvore =  RecuperaArvore(fDescompactado, arvore, texto, bits);
     ImprimeArvore(arvore);
     /*bitmap *bm = NULL;
     unsigned int bmSize = 0;
