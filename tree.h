@@ -78,4 +78,5 @@ void LiberaCaractere(Caracter *caractereStruct);
 
 Tree *RecuperaArvore(FILE *compactado, Tree *arv, unsigned char *texto, bitmap *bits);
 
+Tree *ColocandoConteudoArvore(Tree *arv, unsigned char *texto, bitmap *bits, int *tamAtual);
 #endif

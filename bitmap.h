@@ -40,7 +40,7 @@ bitmap **traslantionGuide(bitmap **mae, int index, bitmap *filha);
 void LiberaTabelaDeTraducao(bitmap **traducao, int quant);
 
 bitmap *EsvaziaBitMap(bitmap *bm);
-
+void InsereLenght(short int tam, bitmap *bm);
 void ImprimeBitmapArquivo(bitmap *bm, FILE *fCompactado);
-
+void LerBitmapArquivo(bitmap *bm, FILE *fCompactado);
 #endif /*BITMAP_H_*/
