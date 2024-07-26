@@ -259,7 +259,6 @@ bitmap *ImprimeArvoreArquivo(Tree *tree, FILE *fCompactado, bitmap *arvBit) {
         bitmapAppendLeastSignificantBit(arvBit, 1);
         unsigned char *byte = CharToByte(tree->info->letra);
         for(int i=0;i<8;i++){
-            printf("%c", byte[i]);
             if(byte[i]=='0') bitmapAppendLeastSignificantBit(arvBit, 0);
             if(byte[i]=='1') bitmapAppendLeastSignificantBit(arvBit, 1);
             }
@@ -336,47 +335,47 @@ unsigned char ByteToChar(unsigned char *byte) {
 
 Tree *RecuperaArvore(FILE *compactado, Tree *arv, unsigned char *texto, bitmap *bits){
     if(!compactado) return NULL;
-    Tree *temp = malloc(sizeof(Tree));
     short int tamBits = 0;
+    unsigned int num = 0;
     fread(&tamBits,sizeof(short int), 1, compactado);
     InsereLenght(tamBits, bits);
     LerBitmapArquivo(bits, compactado);
-    for(int i = 0; i<tamBits; i++){
+    arv = ColocandoConteudoArvore(arv, bits, &num);
+    return arv;
+    /*for(int i = 0; i<tamBits; i++){
         unsigned char bit = bitmapGetBit(bits, i);
         if(bit == 0){
             temp->info = CriaCaracter('\0',-1);
-            temp->esquerda = RecuperaArvore(compactado,temp->esquerda, texto, bits);
-            temp->direita = RecuperaArvore(compactado,temp->direita,texto, bits);
+            //temp->esquerda = RecuperaArvore(compactado,temp->esquerda, texto, bits);
+            //temp->direita = RecuperaArvore(compactado,temp->direita,texto, bits);
         }
-    else if(bit == 1)
-        {   unsigned char letra[8];
-            for(int j = 0;j<8;j++){
-
-            }
-            temp->info = CriaCaracter(ByteToChar(letra), -1);
-            return temp;
-        } 
+    else{   /*unsigned char letra[8];
+            fread(&letra, sizeof(unsigned char),8,compactado);
+            temp->info = CriaCaracter(ByteToChar(letra), -1);*/
+            
+        
     }
     
 
-
-}
-
-/*Tree *ColocandoConteudoArvore(Tree *arv, unsigned char *texto, bitmap *bits, int *tamAtual){
-        Tree *temp = malloc(sizeof(Tree));
-        unsigned char bit = bitmapGetBit(bits, *tamAtual);
+Tree *ColocandoConteudoArvore(Tree *arv, bitmap *bits, unsigned int *tamAtual){
+        arv = malloc(sizeof(Tree));
+        int bit = bitmapGetBit(bits, (*tamAtual));
         if(bit == 0){
-            temp->info = CriaCaracter('\0',-1);
-            temp->esquerda = RecuperaArvore(compactado,temp->esquerda, texto, bits);
-            temp->direita = RecuperaArvore(compactado,temp->direita,texto, bits);
+            arv->info = CriaCaracter('\0',-1);
+            (*tamAtual)++;
+            arv->esquerda = ColocandoConteudoArvore(arv->esquerda, bits, tamAtual);
+            arv->direita = ColocandoConteudoArvore(arv->direita, bits, tamAtual);
         }
     else if(bit == 1)
         {   unsigned char letra[8];
+            (*tamAtual++);
             for(int j = 0;j<8;j++){
-
+               
+                letra[j] = bitmapGetBit(bits,*tamAtual);
+                (*tamAtual++);
             }
-            temp->info = CriaCaracter(ByteToChar(letra), -1);
-            return temp;
+            arv->info = CriaCaracter(ByteToChar(letra), -1);
+            return arv;
         } 
 }
 /*
