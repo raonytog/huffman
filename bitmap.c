@@ -193,21 +193,22 @@ bitmap *EsvaziaBitMap(bitmap *bm){
 }
 void InsereLenght(short int tam, bitmap *bm){
 	if(!bm) return;
-	bm->length = tam;
+	bm->length = (unsigned int)tam;
 }
+
 void ImprimeBitmapArquivo(bitmap *bm, FILE *fCompactado) {
 	if (!bm || !fCompactado) return;
 	unsigned char *texto = bitmapGetContents(bm);
 	short int parada = (bitmapGetLength(bm)/8)+1;
 	fwrite(texto, sizeof(unsigned char), parada, fCompactado);  
 }
+
 void LerBitmapArquivo(bitmap *bm, FILE *fCompactado) {
 	if (!bm || !fCompactado) return;
 	short int parada = (bitmapGetLength(bm)/8)+1;
+
 	unsigned int lenght = bitmapGetLength(bm);
-	for(unsigned int i = 0; i<lenght;i++){
+	for(unsigned int i = 0; i < lenght; i++){
 		fread(&bm->contents[i], sizeof(unsigned char), 1, fCompactado);  
 	}
-	
-	printf("!!");
 }

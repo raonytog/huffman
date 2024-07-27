@@ -54,7 +54,7 @@ Tree **AdicionaCodParada(Tree **arv, int quant);
 
 unsigned char *CharToByte(unsigned char c);
 
-unsigned char ByteToChar(unsigned char *byte);
+int ByteToChar(unsigned char *byte);
 
 /**
  * Funcoes de impressao
