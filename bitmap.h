@@ -7,6 +7,7 @@
 #define BITMAP_H_
 
 #include <stdio.h>
+typedef struct Tree Tree;
 
 /**
  * Estrutura para representar um mapa de bits.
@@ -43,4 +44,5 @@ bitmap *EsvaziaBitMap(bitmap *bm);
 void InsereLenght(short int tam, bitmap *bm);
 void ImprimeBitmapArquivo(bitmap *bm, FILE *fCompactado);
 void LerBitmapArquivo(bitmap *bm, FILE *fCompactado);
+int LerTextoBinArquivo(bitmap *bm, FILE *fCompactado, unsigned int max);
 #endif /*BITMAP_H_*/

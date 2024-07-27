@@ -254,7 +254,7 @@ void ImprimeArvore(Tree *treeNode) {
 }
 
 bitmap *ImprimeArvoreArquivo(Tree *tree, FILE *fCompactado, bitmap *arvBit) {
-    if (!tree || !fCompactado) return;
+    if (!tree || !fCompactado) return NULL;
     if (IsLeaf(tree)) {
         bitmapAppendLeastSignificantBit(arvBit, 1);
         unsigned char *byte = CharToByte(tree->info->letra);
@@ -339,34 +339,22 @@ Tree *RecuperaArvore(FILE *compactado, Tree *arv, unsigned char *texto, bitmap *
     short int tamBits = 0; unsigned int num = 0;
     fread(&tamBits,sizeof(short int), 1, compactado);
     InsereLenght(tamBits, bits);
-
     LerBitmapArquivo(bits, compactado);
     arv = ColocandoConteudoArvore(arv, bits, &num);
 
     return arv;
-    /*for(int i = 0; i<tamBits; i++){
-        unsigned char bit = bitmapGetBit(bits, i);
-        if(bit == 0){
-            temp->info = CriaCaracter('\0',-1);
-            //temp->esquerda = RecuperaArvore(compactado,temp->esquerda, texto, bits);
-            //temp->direita = RecuperaArvore(compactado,temp->direita,texto, bits);
-        }
-    else{   /*unsigned char letra[8];
-            fread(&letra, sizeof(unsigned char),8,compactado);
-            temp->info = CriaCaracter(ByteToChar(letra), -1);*/
 }
 
 Tree *ColocandoConteudoArvore(Tree *arv, bitmap *bits, unsigned int *tamAtual){
     arv = malloc(sizeof(Tree));
     int bit = bitmapGetBit(bits, (*tamAtual));
-
-    if (bit == 0) {
+    if (bit == 0 && (*tamAtual) != bitmapGetLength(bits)) {
         arv->info = CriaCaracter('\0',-1);
         (*tamAtual)++;
         arv->esquerda = ColocandoConteudoArvore(arv->esquerda, bits, tamAtual);
         arv->direita = ColocandoConteudoArvore(arv->direita, bits, tamAtual);
 
-    } else if(bit == 1) {
+    } else if(bit == 1 && (*tamAtual) != bitmapGetLength(bits)) {
         (*tamAtual)++;
 
         unsigned char letra[8];
@@ -381,21 +369,41 @@ Tree *ColocandoConteudoArvore(Tree *arv, bitmap *bits, unsigned int *tamAtual){
 
     return arv;
 }
+Caracter *BuscaLetraEmArvore(Tree *arv, int *num, FILE *fDescompactado, bitmap *bm){
+    if(!arv || !fDescompactado) return "\0";
+    if(!arv->direita && !arv->esquerda) return arv->info->letra;
+    char retorno;
+    int bit = bitmapGetBit(bm, (*num));
+    (*num)++;
+    if(bit==0){ 
+       retorno = BuscaLetraEmArvore(arv->esquerda, num,  fDescompactado,bm);
+    }
+    if(bit==1){
+       retorno = BuscaLetraEmArvore(arv->direita, num,  fDescompactado, bm);
+    }
+    return retorno;
+}
+void DecodificaTexto(Tree *arv, FILE *fDescompactado, FILE *fDecofificado, bitmap *bm){
+    if(!fDescompactado || !fDecofificado) return NULL;
+    char caracter = '\0';
+    int num = 0;
+    int tam = bitmapGetLength(bm);
+    while (caracter !='^' && num<tam)
+    {   caracter = BuscaLetraEmArvore(arv, &num, fDescompactado, bm);
+       if(caracter=='^'){
+         break;
+         }
+       fprintf(fDecofificado, "%c", caracter);
+    }
+    
+    
+}
 
-/*
- if(!compactado) return NULL;
-    Tree *temp = malloc(sizeof(Tree));
-    unsigned int i = bitmapGetLength(bits);
-    //fread(&bits, sizeof(bitmap),1,compactado);
-    /*if(texto[bitmapGetLength(bits)] == '0'){
-            temp->info = CriaCaracter('\0',-1);
-            temp->esquerda = RecuperaArvore(compactado,temp->esquerda, texto, bits);
-            temp->direita = RecuperaArvore(compactado,temp->direita,texto, bits);
-        }
-    else if(texto[bitmapGetLength(bits)] == '1')
-        {   unsigned char letra[8];
-            fread(&letra, sizeof(unsigned char),8,compactado);
-            temp->info = CriaCaracter(ByteToChar(letra), -1);
-            return temp;
-        } 
-    return temp;*/
+int NumMaxCaracteres(Tree *arv){
+    if(!arv) return 0;
+    if(!arv->direita && !arv->esquerda) return 1;
+    int esquerda = NumMaxCaracteres(arv->esquerda) + 1;
+    int direita = NumMaxCaracteres(arv->direita) +1;
+    if(direita>=esquerda) return direita;
+    return esquerda;
+}

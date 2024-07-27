@@ -2,7 +2,6 @@
 #define TREE_H_
 
 #include "bitmap.h"
-
 typedef struct Caracter Caracter;
 typedef struct Tree Tree;
 
@@ -79,4 +78,8 @@ void LiberaCaractere(Caracter *caractereStruct);
 Tree *RecuperaArvore(FILE *compactado, Tree *arv, unsigned char *texto, bitmap *bits);
 
 Tree *ColocandoConteudoArvore(Tree *arv, bitmap *bits,  unsigned int *tamAtual);
+
+void DecodificaTexto(Tree *arv, FILE *fDescompactado, FILE *fDecofificado, bitmap *bm);
+
+int NumMaxCaracteres(Tree *arv);
 #endif

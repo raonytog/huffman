@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#define MEGA 4000000
 #include "tree.h"
 
 // /**
 //  * Ordem para recuperacao:
 //  * 1. Tamanho bitmap arvore
-//  * 2. Bitmap arvore
+//  * 2. Bitmap arvore  
 //  * 3. Tamanho bitmap texto
 //  * 4. Bitmap texto
 //  */
@@ -26,9 +26,18 @@ int main () {
    bitmap *bits = bitmapInit(10000);
    unsigned char *texto = bitmapGetContents(bits);
    int short tamBits = 0;
-   //fread(&tamBits,sizeof(short int), 1, fDescompactado);
    arvore =  RecuperaArvore(fDescompactado, arvore, texto, bits);
    ImprimeArvore(arvore);
+   FILE *decofificado = fopen("textoDecodificado.txt", "w");
+   bitmap *bitmapTexto = bitmapInit(4000000);
+   while (!LerTextoBinArquivo(bitmapTexto, fDescompactado, NumMaxCaracteres(arvore)))
+   {
+      DecodificaTexto(arvore, fDescompactado, decofificado, bitmapTexto);
+      EsvaziaBitMap(bitmapTexto);
+    
+   }
+   DecodificaTexto(arvore, fDescompactado, decofificado, bitmapTexto);
+   
    return 0;
 }
 
