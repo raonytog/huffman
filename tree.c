@@ -335,15 +335,17 @@ Tree *RecuperaArvore(FILE *compactado, Tree *arv, unsigned char *texto, bitmap *
     short int tamBits = 0; unsigned int num = 0;
     fread(&tamBits,sizeof(short int), 1, compactado);
     InsereLenght(tamBits, bits);
-
+    
     LerBitmapArquivo(bits, compactado);
-    // arv = ColocandoConteudoArvore(arv, bits, &num); /** ultimo erro de valgrind vem daq */
+    arv = ColocandoConteudoArvore(arv, bits, &num);
 
     return arv;
 }
 
 Tree *ColocandoConteudoArvore(Tree *arv, bitmap *bits, unsigned int *tamAtual){
     arv = malloc(sizeof(Tree));
+    arv->direita = arv->esquerda = NULL;
+    arv->info = NULL;
     
     int bit = bitmapGetBit(bits, (*tamAtual));
     if (bit == 0 && (*tamAtual) != bitmapGetLength(bits)) {

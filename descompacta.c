@@ -29,17 +29,21 @@ int main () {
    arvore =  RecuperaArvore(fDescompactado, arvore, texto, bits);
    ImprimeArvore(arvore);
 
-   // FILE *decofificado = fopen("textoDecodificado.txt", "w");
-   // bitmap *bitmapTexto = bitmapInit(4000000);
-   // while (!LerTextoBinArquivo(bitmapTexto, fDescompactado, NumMaxCaracteres(arvore))) {
-   //    DecodificaTexto(arvore, fDescompactado, decofificado, bitmapTexto);
-   //    EsvaziaBitMap(bitmapTexto);
-   // }
-   // DecodificaTexto(arvore, fDescompactado, decofificado, bitmapTexto);
+   FILE *fDecodifica = fopen("textoDecodificado.txt", "w");
+   bitmap *bitmapTexto = bitmapInit(4000000);
+   while (!LerTextoBinArquivo(bitmapTexto, fDescompactado, NumMaxCaracteres(arvore))) {
+      DecodificaTexto(arvore, fDescompactado, fDecodifica, bitmapTexto);
+      EsvaziaBitMap(bitmapTexto);
+   }
+   DecodificaTexto(arvore, fDescompactado, fDecodifica, bitmapTexto);
 
    LiberaArvore(arvore);
+   
    bitmapLibera(bits);
+   bitmapLibera(bitmapTexto);
+
    fclose(fDescompactado);
+   fclose(fDecodifica);
    
    return 0;
 }
@@ -64,4 +68,3 @@ bitmap *RecuperaBitmap(unsigned int *size, FILE *fDescompactado) {
 
    return bm;
 }
-

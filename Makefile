@@ -1,5 +1,6 @@
 # Funções de execução geral
-all: runc rund
+all: runc rund 				# executa o codigo inteiro
+vall: valgrindc valgrind 	# valgrind geral
 
 # Funções para o compacta
 # Compila os arquivos necessários para codificar o arquivo.txt
