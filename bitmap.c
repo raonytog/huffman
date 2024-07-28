@@ -210,9 +210,7 @@ void LerBitmapArquivo(bitmap *bm, FILE *fCompactado) {
 	unsigned int lenght = bitmapGetLength(bm);
 	for(unsigned int i = 0; i < parada; i++){
 		fread(&bm->contents[i], sizeof(unsigned char), 1, fCompactado); 
-		
 	}
-
 }
 
 int LerTextoBinArquivo(bitmap *bm, FILE *fCompactado, unsigned int maxCod){

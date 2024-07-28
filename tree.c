@@ -253,23 +253,22 @@ void ImprimeArvore(Tree *treeNode) {
     printf(">");
 }
 
-bitmap *ImprimeArvoreArquivo(Tree *tree, FILE *fCompactado, bitmap *arvBit) {
+bitmap *PreencheBitmapArvore(Tree *tree, FILE *fCompactado, bitmap *arvBit) {
     if (!tree || !fCompactado) return NULL;
+
     if (IsLeaf(tree)) {
         bitmapAppendLeastSignificantBit(arvBit, 1);
         unsigned char *byte = CharToByte(tree->info->letra);
-        for(int i=0;i<8;i++){
+        for(int i = 0; i < 8; i++){
             if(byte[i]=='0') bitmapAppendLeastSignificantBit(arvBit, 0);
             if(byte[i]=='1') bitmapAppendLeastSignificantBit(arvBit, 1);
-            }
+        }
+        free(byte);
        
-    } else{
-        bitmapAppendLeastSignificantBit(arvBit, 0);
-        } 
+    } else bitmapAppendLeastSignificantBit(arvBit, 0);
 
-    ImprimeArvoreArquivo(tree->esquerda, fCompactado, arvBit);
-    ImprimeArvoreArquivo(tree->direita, fCompactado,  arvBit);
-
+    PreencheBitmapArvore(tree->esquerda, fCompactado, arvBit);
+    PreencheBitmapArvore(tree->direita, fCompactado,  arvBit);
 }
 
 /** Funcoes de liberacao */
@@ -302,8 +301,8 @@ Tree **AdicionaCodParada(Tree **arv, int quant){
 
 unsigned char *CharToByte(unsigned char c) {
     int num = (int)c;
-    unsigned char *convertido = malloc(8 * sizeof(unsigned char));
 
+    unsigned char *convertido = malloc(8 * sizeof(unsigned char));
     if (convertido == NULL) {
         printf("Erro de alocação de memória\n");
         return NULL;
@@ -314,11 +313,6 @@ unsigned char *CharToByte(unsigned char c) {
         convertido[i] = (num % 2) + '0'; // Convertendo para '0' ou '1'
         num /= 2;
     }
-
-    // Imprime o resultado
-    // for (int i = 0; i < 8; i++) 
-    //     printf("%c", convertido[i]);
-    // printf("\n");
 
     return convertido;
 }
@@ -341,14 +335,16 @@ Tree *RecuperaArvore(FILE *compactado, Tree *arv, unsigned char *texto, bitmap *
     short int tamBits = 0; unsigned int num = 0;
     fread(&tamBits,sizeof(short int), 1, compactado);
     InsereLenght(tamBits, bits);
+
     LerBitmapArquivo(bits, compactado);
-    arv = ColocandoConteudoArvore(arv, bits, &num);
+    // arv = ColocandoConteudoArvore(arv, bits, &num); /** ultimo erro de valgrind vem daq */
 
     return arv;
 }
 
 Tree *ColocandoConteudoArvore(Tree *arv, bitmap *bits, unsigned int *tamAtual){
     arv = malloc(sizeof(Tree));
+    
     int bit = bitmapGetBit(bits, (*tamAtual));
     if (bit == 0 && (*tamAtual) != bitmapGetLength(bits)) {
         arv->info = CriaCaracter('\0',-1);

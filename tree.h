@@ -63,7 +63,7 @@ void ImprimeVetorArvore(Tree **vetor, int quant);
 
 void ImprimeArvore(Tree *treeNode);
 
-bitmap *ImprimeArvoreArquivo(Tree *tree, FILE *fCompactado, bitmap *arvBit);
+bitmap *PreencheBitmapArvore(Tree *tree, FILE *fCompactado, bitmap *arvBit);
 
 void ImprimeVetor(Tree **vetor, int quant);
 
@@ -82,4 +82,5 @@ Tree *ColocandoConteudoArvore(Tree *arv, bitmap *bits,  unsigned int *tamAtual);
 void DecodificaTexto(Tree *arv, FILE *fDescompactado, FILE *fDecofificado, bitmap *bm);
 
 int NumMaxCaracteres(Tree *arv);
+
 #endif

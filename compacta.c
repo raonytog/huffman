@@ -49,9 +49,7 @@ int main () {
      */
     bitmap **traducao = tabelaTraducao(caracteresEmOrdem, arvore, qtd);
     bitmap *bm = bitmapInit(MEGA);
-    // ImprimeArvore(arvore);
     PreencheBitMap(bm, arvore, text, caracteresEmOrdem, traducao, qtd);
-    // bitmapPrint(bm);
 
     /**
      * Compacta o arquivo de texto traduzido para um arquivo binario,
@@ -60,12 +58,11 @@ int main () {
      * 2. O tamanho do mapa de bits
      * 3. O mapa de bits
      */
-    // Compacta(arvore, bm);
+    Compacta(arvore, bm);
 
     /**
      * Funcoes de liberacao 
      */
-    // LiberaArvore(arvore);
     LiberaTabelaDeTraducao(traducao, qtd);
     bitmapLibera(bm);
 
@@ -96,8 +93,9 @@ void PreencheVetorTexto(int *vetor, char *text) {
 
 void PreencheBitMap(bitmap *bm, Tree *arv, char *text, char *vet, bitmap **tabela, int quant) {
     if (!bm || !arv || !text) return;
+
+    /** Insere os demais caracteres */
     for (int i = 0; text[i] != '\0'; i++) {  
-       
         int index = achaIndexCaracter(vet, text[i], quant);
 
         for (int j = 0; j < bitmapGetLength(tabela[index]); j++) {
@@ -105,11 +103,13 @@ void PreencheBitMap(bitmap *bm, Tree *arv, char *text, char *vet, bitmap **tabel
             bitmapAppendLeastSignificantBit(bm, b);
         }
     }
-      int index = achaIndexCaracter(vet, '^', quant);
-      for (int j = 0; j < bitmapGetLength(tabela[index]); j++) {
-            unsigned char b = bitmapGetBit(tabela[index], j);
-            bitmapAppendLeastSignificantBit(bm, b);
-        }
+
+    /** Insere o caractere de paradas */
+    int index = achaIndexCaracter(vet, '^', quant);
+    for (int j = 0; j < bitmapGetLength(tabela[index]); j++) {
+        unsigned char b = bitmapGetBit(tabela[index], j);
+        bitmapAppendLeastSignificantBit(bm, b);
+    }
 }
 
 void Compacta(Tree *arvore, bitmap *bm) {
@@ -122,18 +122,18 @@ void Compacta(Tree *arvore, bitmap *bm) {
         exit(EXIT_FAILURE);
     }
 
+    /** Preenche bitmap com a arvore binaria */
     bitmap *arvBit = bitmapInit(100000);
-    ImprimeArvoreArquivo(arvore, fCompactado,arvBit);  
-    // bitmapPrint(arvBit);
+    PreencheBitmapArvore(arvore, fCompactado,arvBit);  
 
+    /** Escreve o tamanho do bitmap de arvore e, posteriormente, o bitmap da arvore */
     short int bitsArv = bitmapGetLength(arvBit);
     fwrite(&bitsArv, sizeof(short int), 1, fCompactado);
     ImprimeBitmapArquivo(arvBit, fCompactado);
 
+    /** Escreve o bitmap do texto */
     ImprimeBitmapArquivo(bm, fCompactado);
-
-    // bitmapPrint(bm);
     
+    bitmapLibera(arvBit);
     fclose(fCompactado);
-
 }
