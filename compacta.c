@@ -18,7 +18,6 @@ int main () {
     int *vetor = calloc(MAX_ASCI, sizeof(int));
     char text[MAX_TEXT] = "\0";
     PreencheVetorTexto(vetor, text);
-    //printf("%s\n", text);
 
     /** 
      * Cria, preenche e ordena o vetor de com os caracteres, com base em quais foram
@@ -28,6 +27,7 @@ int main () {
     int qtd = RetornaQtdCaracteres(vetor);
     vetorCaracteres = AdicionaCodParada(vetorCaracteres, qtd);
     qtd++;
+    
     qsort(vetorCaracteres, qtd, sizeof(Tree*),Compara); 
     ImprimeVetor(vetorCaracteres, qtd);
 
@@ -35,7 +35,7 @@ int main () {
      * Cria e preenche o vetor contendo apenas os caracteres 
      * usados no texto
      */
-    char *caracteresEmOrdem  = calloc(qtd,sizeof(char));
+    char *caracteresEmOrdem  = calloc(qtd, sizeof(char));
     vetoresBase(caracteresEmOrdem, qtd, vetorCaracteres);
 
     /**
@@ -43,17 +43,15 @@ int main () {
      * da codificacao de huffman
      */
     Tree *arvore = OrganizaArvorePorPesos(vetorCaracteres, qtd, 0);
-    //ImprimeArvore(arvore);
-    //printf("\n");
 
     /**
      * Cria e preeche o mapa de bits com o texto codificado
      */
     bitmap **traducao = tabelaTraducao(caracteresEmOrdem, arvore, qtd);
     bitmap *bm = bitmapInit(MEGA);
-    ImprimeArvore(arvore);
+    // ImprimeArvore(arvore);
     PreencheBitMap(bm, arvore, text, caracteresEmOrdem, traducao, qtd);
-    bitmapPrint(bm);
+    // bitmapPrint(bm);
 
     /**
      * Compacta o arquivo de texto traduzido para um arquivo binario,
@@ -62,42 +60,26 @@ int main () {
      * 2. O tamanho do mapa de bits
      * 3. O mapa de bits
      */
-    Compacta(arvore, bm);
-
-    // unsigned char *byte = CharToByte('=');
-    // unsigned char letra = ByteToChar(byte);
-    // printf("letra: %c\n", letra);
-
+    // Compacta(arvore, bm);
 
     /**
      * Funcoes de liberacao 
      */
-    LiberaArvore(arvore);
+    // LiberaArvore(arvore);
     LiberaTabelaDeTraducao(traducao, qtd);
+    bitmapLibera(bm);
+
+    for (int i = 0; i < qtd; i++)
+        LiberaArvore(vetorCaracteres[i]);
     free(vetorCaracteres);
+
     free(vetor);
     free(caracteresEmOrdem);
-    bitmapLibera(bm);
 
     return 0;
 }
 
 void PreencheVetorTexto(int *vetor, char *text) {
-    // if (!vetor || !text) return;
-
-    // char letra = '\0';      int idx = 0;
-    // FILE *fText = fopen("texto.txt", "r");
-    // while ( !feof(fText) ) {
-    //     letra = '\0';
-    //     if (fscanf(fText, "%c", &letra) == 1) 
-    //         vetor[letra]++;
-    //         text[idx] = letra;
-    //         idx++;
-    // }
-
-    // text[idx] = '\0';
-    // fclose(fText);
-
     if (!vetor || !text) return;
 
     unsigned char letra = '\0';  int idx = 0;
@@ -140,20 +122,17 @@ void Compacta(Tree *arvore, bitmap *bm) {
         exit(EXIT_FAILURE);
     }
 
-    /** Escreve a string da arvore no binario */
     bitmap *arvBit = bitmapInit(100000);
-  
     ImprimeArvoreArquivo(arvore, fCompactado,arvBit);  
-    bitmapPrint(arvBit);
+    // bitmapPrint(arvBit);
+
     short int bitsArv = bitmapGetLength(arvBit);
     fwrite(&bitsArv, sizeof(short int), 1, fCompactado);
     ImprimeBitmapArquivo(arvBit, fCompactado);
+
     ImprimeBitmapArquivo(bm, fCompactado);
-    bitmapPrint(bm);
 
-    /* Escreve o tamanho do bitmap */
-
-    /** Escreve o bitmap no binario */
+    // bitmapPrint(bm);
     
     fclose(fCompactado);
 

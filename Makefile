@@ -1,40 +1,30 @@
-# funcoes de execucao geral
-all:
-	run c
-	run d
+# Funções de execução geral
+all: runc rund
 
-
-# funcoes para o compacta
-# compila os arquivos necessários para codificar o arquivo.txt
+# Funções para o compacta
+# Compila os arquivos necessários para codificar o arquivo.txt
 compc:
 	clear
-	gcc compacta.c tree.c -o compacta
-	echo Arquivo de compactacao compilado!
+	gcc compacta.c tree.c bitmap.c -o compacta -lm
 
-# executa a codificação do arquivo parametrizado
-runc:
-	make compc
+# Executa a codificação do arquivo parametrizado
+runc: compc
 	./compacta 
 
-# compila e executa o valgrind do codificador
-valgrindc:
-	gcc bitmap.c compacta.c tree.c -o compacta
+# Compila e executa o valgrind do codificador
+valgrindc: compc
 	valgrind --leak-check=full -s --track-origins=yes ./compacta
 
 
-# compila os arquivos necessários para decodificar o arquivo.txt.comp
-# funcoes para o descompacta
+# Funções para o descompacta
+# Compila os arquivos necessários para decodificar o arquivo.txt.comp
 compd:
 	clear
-	gcc descompacta.c tree.c -o descompacta
-	echo Arquivo de descompactacao compilado!
+	gcc descompacta.c tree.c bitmap.c -o descompacta -lm
 
-# executa a codificação do arquivo parametrizado
-rund:
-	make compd
+# Executa a decodificação do arquivo parametrizado
+rund: compd
 	./descompacta 
 
-valgrindd:
-	clear
-	gcc descompacta.c tree.c -o descompacta
+valgrindd: compd
 	valgrind --leak-check=full -s --track-origins=yes ./descompacta

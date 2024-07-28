@@ -120,7 +120,7 @@ Tree **CriaVetorPorPeso(int *vetor){
     if (!vetor) return NULL;
 
     int quant = RetornaQtdCaracteres(vetor);
-    Tree **CaracteresVetor = malloc((quant+1)*(sizeof(Tree*)));
+    Tree **CaracteresVetor = calloc(quant+1, sizeof(Tree*));
 
     int cont = 0;
     for(int i = 0; i < MAX; i++){
@@ -159,7 +159,7 @@ Tree *OrganizaArvorePorPesos(Tree** vetorCaracter, int elementos, int inicio) {
         Caracter *c = CriaCaracter('\0', (peso1+peso2));
         inicio++;
 
-        if( peso1>=peso2) 
+        if (peso1 >= peso2) 
             arvore = criaArvore(vetorCaracter[inicio-1], vetorCaracter[inicio], c);
 
         else 
@@ -212,8 +212,8 @@ bitmap **tabelaTraducao(unsigned char *letras, Tree *arv, int quant){
         sosia = bitmapInit(256);
         sosia = BuscaBinaria(sosia, arv, letras[i], &achou);
         tabela = traslantionGuide(tabela, i, sosia);
-        printf("Caracter: %c - ", letras[i]);
-        bitmapPrint(sosia);
+        // printf("Caracter: %c - ", letras[i]);
+        // bitmapPrint(sosia);
         achou = 0;
     }
 
@@ -279,6 +279,7 @@ void LiberaArvore(Tree *treeNode) {
     LiberaCaractere(treeNode->info);
     LiberaArvore(treeNode->direita);
     LiberaArvore(treeNode->esquerda);
+    
     free(treeNode);
 }
 
@@ -289,13 +290,14 @@ void LiberaCaractere(Caracter *character) {
 
 Tree **AdicionaCodParada(Tree **arv, int quant){
     if(!arv || !quant) return NULL;
-    arv[quant] = malloc(sizeof(Tree));
-    Caracter *nulo =  malloc(sizeof(Caracter));
-    nulo->letra = '^';
-    nulo->peso = 1;
-    arv[quant]->info = nulo;
-    return arv;
 
+    arv[quant] = malloc(sizeof(Tree));
+    
+    Caracter *nulo =  CriaCaracter('^', 1);
+    arv[quant]->info = nulo;
+    arv[quant]->direita = arv[quant]->esquerda = NULL;
+
+    return arv;
 }
 
 unsigned char *CharToByte(unsigned char c) {
@@ -371,10 +373,13 @@ Tree *ColocandoConteudoArvore(Tree *arv, bitmap *bits, unsigned int *tamAtual){
 }
 Caracter *BuscaLetraEmArvore(Tree *arv, int *num, FILE *fDescompactado, bitmap *bm){
     if(!arv || !fDescompactado) return "\0";
+
     if(!arv->direita && !arv->esquerda) return arv->info->letra;
-    char retorno;
+    
     int bit = bitmapGetBit(bm, (*num));
     (*num)++;
+
+    char retorno;
     if(bit==0){ 
        retorno = BuscaLetraEmArvore(arv->esquerda, num,  fDescompactado,bm);
     }
@@ -402,8 +407,11 @@ void DecodificaTexto(Tree *arv, FILE *fDescompactado, FILE *fDecofificado, bitma
 int NumMaxCaracteres(Tree *arv){
     if(!arv) return 0;
     if(!arv->direita && !arv->esquerda) return 1;
+
     int esquerda = NumMaxCaracteres(arv->esquerda) + 1;
     int direita = NumMaxCaracteres(arv->direita) +1;
-    if(direita>=esquerda) return direita;
+
+    if (direita >= esquerda) return direita;
+
     return esquerda;
 }
