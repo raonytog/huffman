@@ -79,7 +79,7 @@ Tree *RecuperaArvore(FILE *compactado, Tree *arv, unsigned char *texto, bitmap *
 
 Tree *ColocandoConteudoArvore(Tree *arv, bitmap *bits,  unsigned int *tamAtual);
 
-void DecodificaTexto(Tree *arv, FILE *fDescompactado, FILE *fDecofificado, bitmap *bm);
+void DecodificaTexto(Tree *arv, FILE *fDescompactado, FILE *fDecofificado, bitmap *bm, short int paradas, short int *numAtual);
 
 int NumMaxCaracteres(Tree *arv);
 

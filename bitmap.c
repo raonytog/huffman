@@ -201,7 +201,7 @@ void ImprimeBitmapArquivo(bitmap *bm, FILE *fCompactado, int final) {
 	if (!bm || !fCompactado) return;
 	unsigned char *texto = bitmapGetContents(bm);
 	unsigned int parada = (bitmapGetLength(bm)/8)+ final;
-	fwrite(texto, sizeof(unsigned char), parada, fCompactado);  
+	fwrite(texto, sizeof(unsigned char), parada, fCompactado);
 }
 
 void LerBitmapArquivo(bitmap *bm, FILE *fCompactado) {
@@ -218,16 +218,10 @@ int LerTextoBinArquivo(bitmap *bm, FILE *fCompactado){
 	long int i = 0, fim = 0;
 	
 	unsigned char bit;
-	/*while(fread(&bit, sizeof(unsigned char), 1, fCompactado) > 0) {
-		for (int i = 0; i < 8; i++) bitmapAppendLeastSignificantBit(bm, (bit >> (7-(1%8))& 0x01));
-		if (bitmapGetLength(bm) == bitmapGetMaxSize(bm)) return 1;
-	}*/
+
 	while ((fread(&bm->contents[i], sizeof(unsigned char), 1, fCompactado) == 1)){
 		i++;
 		long long int lenght = i*8;
-		if(i == 125000){
-			printf("!!!!");
-		}
 	 	InsereLenght(i*8, bm);
 		
 		if(bm->length ==bm->max_size) 

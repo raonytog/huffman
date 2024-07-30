@@ -43,7 +43,8 @@ int achaIndexCaracter(unsigned char *letras, unsigned char procurada, int tam){
     if(!letras) return -1;
 
     for(int i = 0; i < tam;i++)
-        if (procurada == letras[i]) return i;
+        if (procurada == letras[i]) 
+            return i;
 
     return -1;
 }
@@ -292,7 +293,7 @@ Tree **AdicionaCodParada(Tree **arv, int quant){
 
     arv[quant] = malloc(sizeof(Tree));
     
-    Caracter *nulo =  CriaCaracter('^', 1);
+    Caracter *nulo =  CriaCaracter(3, 1);
     arv[quant]->info = nulo;
     arv[quant]->direita = arv[quant]->esquerda = NULL;
 
@@ -391,17 +392,22 @@ char BuscaLetraEmArvore(Tree *arv, int *num, FILE *fDescompactado, bitmap *bm){
     }
     return retorno;
 }
-void DecodificaTexto(Tree *arv, FILE *fDescompactado, FILE *fDecofificado, bitmap *bm){
+void DecodificaTexto(Tree *arv, FILE *fDescompactado, FILE *fDecofificado, bitmap *bm, short int paradas, short int *numAtual){
     if(!fDescompactado || !fDecofificado) return;
     char caracter = '\0';
     int num = 0;
     int tam = bitmapGetLength(bm);
-    while (caracter !='^' && num<tam) {
+    while (num<tam) {
         caracter = BuscaLetraEmArvore(arv, &num, fDescompactado, bm);
-        if(caracter=='^'){
-            break;
+        if(caracter == 3){
+            (*numAtual)++;
+            if((*numAtual)==121){
+                printf("!!!");
+            }
+            if((*numAtual)==paradas) {
+                return;}
         }
-       fprintf(fDecofificado, "%c", caracter);
+        fprintf(fDecofificado, "%c", caracter);
     }
 }
 
