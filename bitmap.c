@@ -175,9 +175,8 @@ bitmap **traslantionGuide(bitmap **mae, int index, bitmap *filha) {
 void LiberaTabelaDeTraducao(bitmap **traducao, int quant) {
 	if(!traducao) return;
 
-	for(int i = 0; i < quant; i++){
+	for(int i = 0; i < quant; i++)
 		bitmapLibera(traducao[i]);
-	}
 
 	free(traducao);
 }
@@ -185,12 +184,12 @@ void LiberaTabelaDeTraducao(bitmap **traducao, int quant) {
 bitmap *EsvaziaBitMap(bitmap *bm){
     if(!bm) return NULL;
 
-    while(bitmapGetLength(bm) > 0){
-        bitmapRemoveLeastSignificantBit(bm);
-    }
+    while(bitmapGetLength(bm) > 0) 
+		bitmapRemoveLeastSignificantBit(bm);
 
     return bm;
 }
+
 void InsereLenght(short int tam, bitmap *bm){
 	if(!bm) return;
 	bm->length = (unsigned int)tam;
@@ -218,13 +217,10 @@ int LerTextoBinArquivo(bitmap *bm, FILE *fCompactado, unsigned int maxCod){
 	InsereLenght(8, bm);
 	
 	while ((fread(&bm->contents[i], sizeof(unsigned char), 1, fCompactado)==1)){
-			i++;
-			InsereLenght(i*8, bm);
-			if(bm->length + maxCod>= bm->max_size){ return 0;}
-	
+		i++;
+		InsereLenght(i*8, bm);
+		if(bm->length + maxCod>= bm->max_size){ return 0;}
 	}
+
 	return 1;
-	}
-		
-	
-	
+}
