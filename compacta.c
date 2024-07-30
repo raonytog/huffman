@@ -6,7 +6,7 @@
 #include "bitmap.h"
 
 #define MAX_ASCI 256  /** tamanho maximo do vetor com as qts de uso de cada letra */
-#define MEGA 10
+#define MEGA 1000000
 
 void PreencheVetorTexto(int *vetor);
 void PreencheBitMap(bitmap *bm, Tree *arv, char *vet, bitmap **tabela, int quant, FILE *arq);
@@ -47,6 +47,7 @@ int main () {
      */
     bitmap **traducao = tabelaTraducao(caracteresEmOrdem, arvore, qtd);
     bitmap *bm = bitmapInit(MEGA);
+    // PreencheBitMap(bm, arvore, text, caracteresEmOrdem, traducao, qtd);
 
     /**
      * Compacta o arquivo de texto traduzido para um arquivo binario,
@@ -77,7 +78,7 @@ void PreencheVetorTexto(int *vetor) {
     if (!vetor) return;
 
     unsigned char letra = '\0';  int idx = 0;
-    FILE *fText = fopen("texto.txt", "rb");
+    FILE *fText = fopen("biblia.txt", "rb");
     while (fread(&letra, sizeof(unsigned char), 1, fText) == 1) {
         vetor[letra]++;
     }
@@ -89,21 +90,21 @@ void PreencheBitMap(bitmap *bm, Tree *arv, char *vet, bitmap **tabela, int quant
 
     /** Insere os demais caracteres */
     unsigned char letra = '\0';
-    FILE *fText = fopen("texto.txt", "rb");
+    int qtd = 0;
+    FILE *fText = fopen("biblia.txt", "rb");
     while (fread(&letra, sizeof(unsigned char), 1, fText) == 1) {
-
         int index = achaIndexCaracter(vet, letra, quant);
 
         for (int j = 0; j < bitmapGetLength(tabela[index]); j++) {
             unsigned char b = bitmapGetBit(tabela[index], j);
             bitmapAppendLeastSignificantBit(bm, b);
 
-
             /** Verifica se o bitmap esta cheio */
-            if (bitmapGetLength(bm) >= bitmapGetMaxSize(bm)) {
-                ImprimeBitmapArquivo(bm, arq);
-                printf("Esvaziou 1: "); bitmapPrint(bm);
-                bm = EsvaziaBitMap(bm);
+            if (bitmapGetLength(bm)== bitmapGetMaxSize(bm)) {
+                ImprimeBitmapArquivo(bm, arq, 0);
+                bitmapLibera(bm);
+                bm = bitmapInit(MEGA);
+                qtd++;
             }
         }
     }
@@ -114,15 +115,15 @@ void PreencheBitMap(bitmap *bm, Tree *arv, char *vet, bitmap **tabela, int quant
         unsigned char b = bitmapGetBit(tabela[index], j);
         bitmapAppendLeastSignificantBit(bm, b);
 
-        if (bitmapGetLength(bm) >= bitmapGetMaxSize(bm)) {
-            ImprimeBitmapArquivo(bm, arq);
-            printf("Esvaziou 2: ");bitmapPrint(bm);
-            bm = EsvaziaBitMap(bm);
+       if (bitmapGetLength(bm)== bitmapGetMaxSize(bm)) {
+            ImprimeBitmapArquivo(bm, arq, 0);
+            bitmapLibera(bm);
+            bm = bitmapInit(MEGA);
+            qtd++;
         }
     }
 
-    printf("Saiu: ");bitmapPrint(bm);
-    fclose(fText);
+    // fclose(fText);
 }
 
 void Compacta(bitmap *bm, Tree *arv, char *vet, bitmap **tabela, int quant) {
@@ -142,12 +143,12 @@ void Compacta(bitmap *bm, Tree *arv, char *vet, bitmap **tabela, int quant) {
     /** Escreve o tamanho do bitmap de arvore e, posteriormente, o bitmap da arvore */
     short int bitsArv = bitmapGetLength(arvBit);
     fwrite(&bitsArv, sizeof(short int), 1, fCompactado);
-    ImprimeBitmapArquivo(arvBit, fCompactado);
+    ImprimeBitmapArquivo(arvBit, fCompactado,1);
     
     /** Escreve o bitmap do texto */
-    printf("\n\ncomeca aqui\n");
     PreencheBitMap(bm, arv, vet, tabela, quant, fCompactado);
-    ImprimeBitmapArquivo(bm, fCompactado);
+    ImprimeBitmapArquivo(bm, fCompactado, 1);
+    
     
     bitmapLibera(arvBit);
     fclose(fCompactado);
