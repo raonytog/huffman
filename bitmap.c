@@ -33,6 +33,7 @@ void assert(int testresult, char* message) {
  * @param bm O mapa de bits.
  */
 unsigned char* bitmapGetContents(bitmap* bm) {
+	if (!bm) return NULL;
 	return bm->contents;
 }
 
@@ -42,6 +43,7 @@ unsigned char* bitmapGetContents(bitmap* bm) {
  * @return O tamanho maximo do mapa de bits.
  */
 unsigned int bitmapGetMaxSize(bitmap* bm) {
+	if (!bm) return 0;
 	return bm->max_size;
 }
 
@@ -51,6 +53,7 @@ unsigned int bitmapGetMaxSize(bitmap* bm) {
  * @return O tamanho atual do mapa de bits.
  */
 unsigned int bitmapGetLength(bitmap* bm) {
+	if (!bm) return 0;
 	return bm->length;
 }
 
@@ -147,17 +150,20 @@ void bitmapRemoveLeastSignificantBit(bitmap* bm) {
     }
 }
 
-
 /**
  * Libera a memória dinâmica alocada para o mapa de bits.
  * @param bm O mapa de bits.
  */
 void bitmapLibera (bitmap* bm) {
-    free (bm->contents);
-    free (bm);
+	if(!bm) return;
+
+	free(bm->contents);
+    free(bm);
 }
 
 void bitmapPrint(bitmap *bm) {
+	if (!bm) return;
+
 	for (int i = 0; i < bitmapGetLength(bm); i++) {
 		// printf("bit #%d = %0x\n", i, bitmapGetBit(bm, i));
 		printf("%0x", bitmapGetBit(bm, i));
@@ -168,9 +174,7 @@ void bitmapPrint(bitmap *bm) {
 
 bitmap **traslantionGuide(bitmap **mae, int index, bitmap *filha) {
 	if(!mae || !filha) return NULL;
-
 	mae[index] = filha;
-
 	return mae;
 }
 
@@ -199,6 +203,7 @@ void InsereLenght(long long int tam, bitmap *bm){
 
 void ImprimeBitmapArquivo(bitmap *bm, FILE *fCompactado, int final) {
 	if (!bm || !fCompactado) return;
+
 	unsigned char *texto = bitmapGetContents(bm);
 	unsigned int parada = (bitmapGetLength(bm)/8)+ final;
 	fwrite(texto, sizeof(unsigned char), parada, fCompactado);
@@ -206,19 +211,18 @@ void ImprimeBitmapArquivo(bitmap *bm, FILE *fCompactado, int final) {
 
 void LerBitmapArquivo(bitmap *bm, FILE *fCompactado) {
 	if (!bm || !fCompactado) return;
-	short int parada = (bitmapGetLength(bm)/8)+1;
 
+	short int parada = (bitmapGetLength(bm)/8)+1;
 	unsigned int lenght = bitmapGetLength(bm);
-	for(unsigned int i = 0; i < parada; i++){
+	for(unsigned int i = 0; i < parada; i++)
 		fread(&bm->contents[i], sizeof(unsigned char), 1, fCompactado); 
-	}
 }
 
 int LerTextoBinArquivo(bitmap *bm, FILE *fCompactado){
-	long int i = 0, fim = 0;
-	
-	unsigned char bit;
+	if (!bm || !fCompactado) return 0;
 
+	long int i = 0, fim = 0;
+	unsigned char bit;
 	while ((fread(&bm->contents[i], sizeof(unsigned char), 1, fCompactado) == 1)){
 		i++;
 		long long int lenght = i*8;

@@ -231,7 +231,7 @@ int IsLeaf(Tree *arv) {
     if (!arv) return 0;
 
     if (!arv->direita && !arv->esquerda) return 1;
-    return 0;
+    else return 0;
 }
 
 void ImprimeVetor(Tree **vetor, int quant) {

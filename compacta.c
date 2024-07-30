@@ -7,6 +7,7 @@
 
 #define MAX_ASCI 256  /** tamanho maximo do vetor com as qts de uso de cada letra */
 #define MEGA 1000000
+/* 1000000 */
 
 void PreencheVetorTexto(int *vetor, char *path);
 void PreencheBitMap(bitmap *bm, Tree *arv, char *vet, bitmap **tabela, int quant, FILE *arq, char *path);
@@ -23,7 +24,7 @@ int main (int argc, char const *argv[]) {
     strcpy(path, argv[1]);
 
 // int main() {
-//     char path[100] = "print.png";
+//     char path[100] = "texto.txt";
 
     /** Preenche e armazena o vetor dos caracteres e o texto completo */
     int *vetor = calloc(MAX_ASCI, sizeof(int));
@@ -127,7 +128,7 @@ void PreencheBitMap(bitmap *bm, Tree *arv, char *vet, bitmap **tabela, int quant
             bitmapAppendLeastSignificantBit(bm, b);
 
             /** Verifica se o bitmap esta cheio */
-            if (bitmapGetLength(bm)== bitmapGetMaxSize(bm)) {
+            if (bitmapGetLength(bm) == bitmapGetMaxSize(bm)) {
                 ImprimeBitmapArquivo(bm, arq, 0);
                 bitmapLibera(bm);
                 bm = bitmapInit(MEGA);
@@ -142,7 +143,7 @@ void PreencheBitMap(bitmap *bm, Tree *arv, char *vet, bitmap **tabela, int quant
         unsigned char b = bitmapGetBit(tabela[index], j);
         bitmapAppendLeastSignificantBit(bm, b);
 
-       if (bitmapGetLength(bm)== bitmapGetMaxSize(bm)) {
+        if (bitmapGetLength(bm) == bitmapGetMaxSize(bm)) {
             ImprimeBitmapArquivo(bm, arq, 0);
             bitmapLibera(bm);
             bm = bitmapInit(MEGA);
