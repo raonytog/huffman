@@ -6,18 +6,30 @@
 #include "bitmap.h"
 
 #define MAX_ASCI 256  /** tamanho maximo do vetor com as qts de uso de cada letra */
-#define MAX_TEXT 4096 /** tamanho maximo do vetor q armazena o texto */
-#define MEGA 4000000
+#define MEGA 1000000
+/* 1000000 */
 
-void PreencheVetorTexto(int *vetor, char *text);
-void PreencheBitMap(bitmap *bm, Tree *arv, char *text, char *vet, bitmap **tabela, int quant);
-void Compacta(Tree *arvore, bitmap *bm);
+void PreencheVetorTexto(int *vetor, char *path);
+void PreencheBitMap(bitmap *bm, Tree *arv, char *vet, bitmap **tabela, int quant, FILE *arq, char *path);
+void Compacta(bitmap *bm, Tree *arv, char *vet, bitmap **tabela, int quant, char *path, short int parada);
+short int retornaQtdParada(int *vetor, char c);
 
-int main () {
+int main (int argc, char const *argv[]) {
+    if (argc <= 1) {
+        printf("ERRO: diretorio de arquivos nao informado\n");
+        exit(1);
+    }
+
+    char path[100]; 
+    strcpy(path, argv[1]);
+
+// int main() {
+//     char path[100] = "texto.txt";
+
     /** Preenche e armazena o vetor dos caracteres e o texto completo */
     int *vetor = calloc(MAX_ASCI, sizeof(int));
-    char text[MAX_TEXT] = "\0";
-    PreencheVetorTexto(vetor, text);
+    PreencheVetorTexto(vetor, path);
+    short int CaracterParada = retornaQtdParada(vetor, 3);
 
     /** 
      * Cria, preenche e ordena o vetor de com os caracteres, com base em quais foram
@@ -28,7 +40,7 @@ int main () {
     vetorCaracteres = AdicionaCodParada(vetorCaracteres, qtd);
     qtd++;
     
-    qsort(vetorCaracteres, qtd, sizeof(Tree*),Compara); 
+    qsort(vetorCaracteres, qtd, sizeof(Tree*), Compara); 
     ImprimeVetor(vetorCaracteres, qtd);
 
     /** 
@@ -49,7 +61,7 @@ int main () {
      */
     bitmap **traducao = tabelaTraducao(caracteresEmOrdem, arvore, qtd);
     bitmap *bm = bitmapInit(MEGA);
-    PreencheBitMap(bm, arvore, text, caracteresEmOrdem, traducao, qtd);
+    // PreencheBitMap(bm, arvore, text, caracteresEmOrdem, traducao, qtd);
 
     /**
      * Compacta o arquivo de texto traduzido para um arquivo binario,
@@ -58,7 +70,7 @@ int main () {
      * 2. O tamanho do mapa de bits
      * 3. O mapa de bits
      */
-    Compacta(arvore, bm);
+    Compacta(bm, arvore, caracteresEmOrdem, traducao, qtd, path, CaracterParada);
 
     /**
      * Funcoes de liberacao 
@@ -76,47 +88,77 @@ int main () {
     return 0;
 }
 
-void PreencheVetorTexto(int *vetor, char *text) {
-    if (!vetor || !text) return;
-
-    unsigned char letra = '\0';  int idx = 0;
-    FILE *fText = fopen("texto.txt", "rb");
-    while (fread(&letra, sizeof( unsigned char), 1, fText) == 1) {
-        vetor[letra]++;
-        text[idx] = letra;
-        idx++;
-    }
-    letra = '\0';
-    fclose(fText);
-
+short int retornaQtdParada(int *vetor, char c){
+    if(!vetor) return EXIT_FAILURE;
+    return vetor[c]+1;
 }
 
-void PreencheBitMap(bitmap *bm, Tree *arv, char *text, char *vet, bitmap **tabela, int quant) {
-    if (!bm || !arv || !text) return;
+void PreencheVetorTexto(int *vetor, char* path) {
+    if (!vetor) return;
+
+    unsigned char letra = '\0';  int idx = 0;
+    FILE *fText = fopen(path, "rb");
+    if (!fText) {
+        printf("Texto nao abriu!");
+        exit(EXIT_FAILURE);
+    }
+
+    while (fread(&letra, sizeof(unsigned char), 1, fText) == 1) {
+        vetor[letra]++;
+    }
+    fclose(fText);
+}
+
+void PreencheBitMap(bitmap *bm, Tree *arv, char *vet, bitmap **tabela, int quant, FILE *arq, char *path) {
+    if (!bm || !arv) return;
 
     /** Insere os demais caracteres */
-    for (int i = 0; text[i] != '\0'; i++) {  
-        int index = achaIndexCaracter(vet, text[i], quant);
+    unsigned char letra = '\0';
+    int qtd = 0;
+    FILE *fText = fopen(path, "rb");
+    if (!fText) {
+        printf("Arquivo nao abriu em PreencheBitMap\n");
+        exit(EXIT_FAILURE);
+    }
+    while (fread(&letra, sizeof(unsigned char), 1, fText) == 1) {
+        int index = achaIndexCaracter(vet, letra, quant);
 
         for (int j = 0; j < bitmapGetLength(tabela[index]); j++) {
             unsigned char b = bitmapGetBit(tabela[index], j);
             bitmapAppendLeastSignificantBit(bm, b);
+
+            /** Verifica se o bitmap esta cheio */
+            if (bitmapGetLength(bm) == bitmapGetMaxSize(bm)) {
+                ImprimeBitmapArquivo(bm, arq, 0);
+                bitmapLibera(bm);
+                bm = bitmapInit(MEGA);
+                qtd++;
+            }
         }
     }
 
     /** Insere o caractere de paradas */
-    int index = achaIndexCaracter(vet, '^', quant);
+    int index = achaIndexCaracter(vet, 3, quant);
     for (int j = 0; j < bitmapGetLength(tabela[index]); j++) {
         unsigned char b = bitmapGetBit(tabela[index], j);
         bitmapAppendLeastSignificantBit(bm, b);
+
+        if (bitmapGetLength(bm) == bitmapGetMaxSize(bm)) {
+            ImprimeBitmapArquivo(bm, arq, 0);
+            bitmapLibera(bm);
+            bm = bitmapInit(MEGA);
+            qtd++;
+        }
     }
+
+    fclose(fText);
 }
 
-void Compacta(Tree *arvore, bitmap *bm) {
-    if (!arvore || !bm) return;
+void Compacta(bitmap *bm, Tree *arv, char *vet, bitmap **tabela, int quant, char *path, short int parada) {
+    if (!bm || !arv) return;
 
-    FILE *fCompactado = NULL;
-    fCompactado = fopen("texto.txt.comp", "wb");
+    char newPath[100]; strcpy(newPath, path); strcat(newPath, ".comp");
+    FILE *fCompactado = fopen(newPath, "wb");
     if (fCompactado == NULL) {
         printf("Erro ao criar o arquivo binario compactado\n");
         exit(EXIT_FAILURE);
@@ -124,15 +166,18 @@ void Compacta(Tree *arvore, bitmap *bm) {
 
     /** Preenche bitmap com a arvore binaria */
     bitmap *arvBit = bitmapInit(100000);
-    PreencheBitmapArvore(arvore, fCompactado,arvBit);  
+    PreencheBitmapArvore(arv, fCompactado, arvBit);
 
     /** Escreve o tamanho do bitmap de arvore e, posteriormente, o bitmap da arvore */
     short int bitsArv = bitmapGetLength(arvBit);
     fwrite(&bitsArv, sizeof(short int), 1, fCompactado);
-    ImprimeBitmapArquivo(arvBit, fCompactado);
-
+    ImprimeBitmapArquivo(arvBit, fCompactado, 1);
+    
     /** Escreve o bitmap do texto */
-    ImprimeBitmapArquivo(bm, fCompactado);
+    long long int qtdBitsTxt = 0;
+    fwrite(&parada, sizeof(short int), 1, fCompactado);
+    PreencheBitMap(bm, arv, vet, tabela, quant, fCompactado, path);
+    ImprimeBitmapArquivo(bm, fCompactado, 1);
     
     bitmapLibera(arvBit);
     fclose(fCompactado);

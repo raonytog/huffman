@@ -41,8 +41,8 @@ bitmap **traslantionGuide(bitmap **mae, int index, bitmap *filha);
 void LiberaTabelaDeTraducao(bitmap **traducao, int quant);
 
 bitmap *EsvaziaBitMap(bitmap *bm);
-void InsereLenght(short int tam, bitmap *bm);
-void ImprimeBitmapArquivo(bitmap *bm, FILE *fCompactado);
+void InsereLenght(long long int tam, bitmap *bm);
+void ImprimeBitmapArquivo(bitmap *bm, FILE *fCompactado, int final);
 void LerBitmapArquivo(bitmap *bm, FILE *fCompactado);
-int LerTextoBinArquivo(bitmap *bm, FILE *fCompactado, unsigned int max);
+int LerTextoBinArquivo(bitmap *bm, FILE *fCompactado);
 #endif /*BITMAP_H_*/

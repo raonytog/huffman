@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define MEGA 4000000
+#define MEGA 1000000
 #include "tree.h"
 
 // /**
@@ -14,28 +14,47 @@
 
 bitmap *RecuperaBitmap(unsigned int *size, FILE *fDescompactado);
 
-int main () {
+int main (int argc, char const *argv[]) {
+   if (argc <= 1) {
+      printf("ERRO: diretorio de arquivos nao informado\n");
+      exit(1);
+   }
+
+   char path[100]; 
+   strcpy(path, argv[1]);
+
+// int main() {
+//      char path[100] = "print.png.comp";
+
    FILE *fDescompactado = NULL;
-   fDescompactado = fopen("texto.txt.comp", "rb");
+   fDescompactado = fopen(path, "rb");
    if (fDescompactado == NULL) {
       printf("Erro ao abrir o arquivo binario compactado\n");
       exit(EXIT_FAILURE);
    }
 
-   Tree *arvore = NULL;
-   bitmap *bits = bitmapInit(10000);
-   unsigned char *texto;
-   int short tamBits = 0;
+   /** Recupera a Arvore do arquivo binario */
+   Tree *arvore = NULL;    bitmap *bits = bitmapInit(10000);
+   unsigned char *texto;   int short tamBits = 0;
    arvore =  RecuperaArvore(fDescompactado, arvore, texto, bits);
-   ImprimeArvore(arvore);
+   
+   /** Path para arquivo de saida descopactado */
+   char pathDecodificado[100] = "desc_"; strcat(pathDecodificado, path);
+   pathDecodificado[strlen(pathDecodificado)-5] = '\0';
 
-   FILE *fDecodifica = fopen("textoDecodificado.txt", "w");
-   bitmap *bitmapTexto = bitmapInit(4000000);
-   while (!LerTextoBinArquivo(bitmapTexto, fDescompactado, NumMaxCaracteres(arvore))) {
-      DecodificaTexto(arvore, fDescompactado, fDecodifica, bitmapTexto);
-      EsvaziaBitMap(bitmapTexto);
+   short int paradas = 0;
+   fread(&paradas,sizeof(short int), 1, fDescompactado);
+   FILE *fDecodifica = fopen(pathDecodificado, "wb");
+   bitmap *bitmapTexto = bitmapInit(MEGA);
+   short int num = 0;
+   int decodifica = LerTextoBinArquivo(bitmapTexto, fDescompactado);
+   while(!decodifica){
+      DecodificaTexto(arvore, fDescompactado, fDecodifica, bitmapTexto, paradas, &num);
+      bitmapLibera(bitmapTexto);
+      bitmapTexto = bitmapInit(MEGA);
+      decodifica = LerTextoBinArquivo(bitmapTexto, fDescompactado);
    }
-   DecodificaTexto(arvore, fDescompactado, fDecodifica, bitmapTexto);
+   if(decodifica) DecodificaTexto(arvore, fDescompactado, fDecodifica, bitmapTexto, paradas, &num);
 
    LiberaArvore(arvore);
    

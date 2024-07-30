@@ -33,6 +33,7 @@ void assert(int testresult, char* message) {
  * @param bm O mapa de bits.
  */
 unsigned char* bitmapGetContents(bitmap* bm) {
+	if (!bm) return NULL;
 	return bm->contents;
 }
 
@@ -42,6 +43,7 @@ unsigned char* bitmapGetContents(bitmap* bm) {
  * @return O tamanho maximo do mapa de bits.
  */
 unsigned int bitmapGetMaxSize(bitmap* bm) {
+	if (!bm) return 0;
 	return bm->max_size;
 }
 
@@ -51,6 +53,7 @@ unsigned int bitmapGetMaxSize(bitmap* bm) {
  * @return O tamanho atual do mapa de bits.
  */
 unsigned int bitmapGetLength(bitmap* bm) {
+	if (!bm) return 0;
 	return bm->length;
 }
 
@@ -131,8 +134,7 @@ void bitmapAppendLeastSignificantBit(bitmap* bm, unsigned char bit) {
 
 void bitmapRemoveLeastSignificantBit(bitmap* bm) {
     // Verificar se há pelo menos um bit no bitmap
-    if (bm->length > 0) {
-		// Decrementar o tamanho do bitmap para ignorar o último bit
+	if(!bm) return;
 		int byte_pos = bm->length / 8;
 		int bit_pos = bm->length % 8;
 
@@ -141,21 +143,27 @@ void bitmapRemoveLeastSignificantBit(bitmap* bm) {
 
 		// Aplica a máscara ao byte correspondente
 		bm->contents[byte_pos] &= mask;
+    if (bm->length > 0) {
+		// Decrementar o tamanho do bitmap para ignorar o último bit
+		
 		bm->length--;
     }
 }
-
 
 /**
  * Libera a memória dinâmica alocada para o mapa de bits.
  * @param bm O mapa de bits.
  */
 void bitmapLibera (bitmap* bm) {
-    free (bm->contents);
-    free (bm);
+	if(!bm) return;
+
+	free(bm->contents);
+    free(bm);
 }
 
 void bitmapPrint(bitmap *bm) {
+	if (!bm) return;
+
 	for (int i = 0; i < bitmapGetLength(bm); i++) {
 		// printf("bit #%d = %0x\n", i, bitmapGetBit(bm, i));
 		printf("%0x", bitmapGetBit(bm, i));
@@ -166,65 +174,63 @@ void bitmapPrint(bitmap *bm) {
 
 bitmap **traslantionGuide(bitmap **mae, int index, bitmap *filha) {
 	if(!mae || !filha) return NULL;
-
 	mae[index] = filha;
-
 	return mae;
 }
 
 void LiberaTabelaDeTraducao(bitmap **traducao, int quant) {
 	if(!traducao) return;
 
-	for(int i = 0; i < quant; i++){
+	for(int i = 0; i < quant; i++)
 		bitmapLibera(traducao[i]);
-	}
 
 	free(traducao);
 }
 
 bitmap *EsvaziaBitMap(bitmap *bm){
     if(!bm) return NULL;
-
-    while(bitmapGetLength(bm) > 0){
-        bitmapRemoveLeastSignificantBit(bm);
-    }
-
+	
+    while(bitmapGetLength(bm) > 0) 
+		bitmapRemoveLeastSignificantBit(bm);
+	if(bitmapGetLength(bm)==0) bitmapRemoveLeastSignificantBit(bm);
     return bm;
 }
-void InsereLenght(short int tam, bitmap *bm){
+
+void InsereLenght(long long int tam, bitmap *bm){
 	if(!bm) return;
 	bm->length = (unsigned int)tam;
 }
 
-void ImprimeBitmapArquivo(bitmap *bm, FILE *fCompactado) {
+void ImprimeBitmapArquivo(bitmap *bm, FILE *fCompactado, int final) {
 	if (!bm || !fCompactado) return;
+
 	unsigned char *texto = bitmapGetContents(bm);
-	short int parada = (bitmapGetLength(bm)/8)+1;
-	fwrite(texto, sizeof(unsigned char), parada, fCompactado);  
+	unsigned int parada = (bitmapGetLength(bm)/8)+ final;
+	fwrite(texto, sizeof(unsigned char), parada, fCompactado);
 }
 
 void LerBitmapArquivo(bitmap *bm, FILE *fCompactado) {
 	if (!bm || !fCompactado) return;
-	short int parada = (bitmapGetLength(bm)/8)+1;
 
+	short int parada = (bitmapGetLength(bm)/8)+1;
 	unsigned int lenght = bitmapGetLength(bm);
-	for(unsigned int i = 0; i < parada; i++){
+	for(unsigned int i = 0; i < parada; i++)
 		fread(&bm->contents[i], sizeof(unsigned char), 1, fCompactado); 
-	}
 }
 
-int LerTextoBinArquivo(bitmap *bm, FILE *fCompactado, unsigned int maxCod){
-	int i = 0, fim = 0;
-	InsereLenght(8, bm);
-	
-	while ((fread(&bm->contents[i], sizeof(unsigned char), 1, fCompactado)==1)){
-			i++;
-			InsereLenght(i*8, bm);
-			if(bm->length + maxCod>= bm->max_size){ return 0;}
-	
-	}
-	return 1;
-	}
+int LerTextoBinArquivo(bitmap *bm, FILE *fCompactado){
+	if (!bm || !fCompactado) return 0;
+
+	long int i = 0, fim = 0;
+	unsigned char bit;
+	while ((fread(&bm->contents[i], sizeof(unsigned char), 1, fCompactado) == 1)){
+		i++;
+		long long int lenght = i*8;
+	 	InsereLenght(i*8, bm);
 		
-	
-	
+		if(bm->length ==bm->max_size) 
+			return 0;
+	}
+
+	return 1;
+}
