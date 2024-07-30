@@ -122,7 +122,7 @@ static void bitmapSetBit(bitmap* bm, unsigned int index, unsigned char bit) {
  */
 void bitmapAppendLeastSignificantBit(bitmap* bm, unsigned char bit) {
 	// verificar se bm->length<bm->max_size, caso contrario, o bitmap esta' cheio
-	assert(bm->length<bm->max_size, "Tamanho maximo excedido no mapa de bits.");
+	assert(bm->length < bm->max_size, "Tamanho maximo excedido no mapa de bits.");
 
 	// como um bit sera' adicionado, devemos incrementar o tamanho do mapa de bits
 	bm->length++;
@@ -130,9 +130,9 @@ void bitmapAppendLeastSignificantBit(bitmap* bm, unsigned char bit) {
 }
 
 void bitmapRemoveLeastSignificantBit(bitmap* bm) {
+	if (!bm) return;
+
     // Verificar se há pelo menos um bit no bitmap
-    if (bm->length > 0) {
-		// Decrementar o tamanho do bitmap para ignorar o último bit
 		int byte_pos = bm->length / 8;
 		int bit_pos = bm->length % 8;
 
@@ -141,6 +141,8 @@ void bitmapRemoveLeastSignificantBit(bitmap* bm) {
 
 		// Aplica a máscara ao byte correspondente
 		bm->contents[byte_pos] &= mask;
+    if (bm->length > 0) {
+		// Decrementar o tamanho do bitmap para ignorar o último bit
 		bm->length--;
     }
 }
@@ -184,8 +186,11 @@ void LiberaTabelaDeTraducao(bitmap **traducao, int quant) {
 bitmap *EsvaziaBitMap(bitmap *bm){
     if(!bm) return NULL;
 
-    while(bitmapGetLength(bm) > 0) 
+    while (bitmapGetLength(bm) > 0) 
 		bitmapRemoveLeastSignificantBit(bm);
+
+	bitmapRemoveLeastSignificantBit(bm);
+
 
     return bm;
 }
@@ -197,7 +202,9 @@ void InsereLenght(short int tam, bitmap *bm){
 
 void ImprimeBitmapArquivo(bitmap *bm, FILE *fCompactado) {
 	if (!bm || !fCompactado) return;
+
 	unsigned char *texto = bitmapGetContents(bm);
+	bitmapPrint(bm);
 	short int parada = (bitmapGetLength(bm)/8)+1;
 	fwrite(texto, sizeof(unsigned char), parada, fCompactado);  
 }
@@ -208,7 +215,7 @@ void LerBitmapArquivo(bitmap *bm, FILE *fCompactado) {
 
 	unsigned int lenght = bitmapGetLength(bm);
 	for(unsigned int i = 0; i < parada; i++){
-		fread(&bm->contents[i], sizeof(unsigned char), 1, fCompactado); 
+		fread(&bm->contents[i], sizeof(unsigned char), 1, fCompactado);
 	}
 }
 
@@ -219,7 +226,7 @@ int LerTextoBinArquivo(bitmap *bm, FILE *fCompactado, unsigned int maxCod){
 	while ((fread(&bm->contents[i], sizeof(unsigned char), 1, fCompactado)==1)){
 		i++;
 		InsereLenght(i*8, bm);
-		if(bm->length + maxCod>= bm->max_size){ return 0;}
+		if (bm->length + maxCod >= bm->max_size) return 0;
 	}
 
 	return 1;
