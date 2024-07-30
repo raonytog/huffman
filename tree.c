@@ -369,33 +369,36 @@ Tree *ColocandoConteudoArvore(Tree *arv, bitmap *bits, unsigned int *tamAtual){
 
     return arv;
 }
-
-static char BuscaLetraEmArvore(Tree *arv, int *num, FILE *fDescompactado, bitmap *bm){
+char BuscaLetraEmArvore(Tree *arv, int *num, FILE *fDescompactado, bitmap *bm){
     if(!arv || !fDescompactado) return '\0';
 
     if(!arv->direita && !arv->esquerda) return arv->info->letra;
-    
+    if(bitmapGetLength(bm)==(*num)){
+        bitmapLibera(bm);
+        bm = bitmapInit(1000000);
+        LerTextoBinArquivo(bm, fDescompactado);
+        (*num) = 0;
+    }
     int bit = bitmapGetBit(bm, (*num));
     (*num)++;
 
     char retorno;
-    if(bit == 0) { 
+    if(bit==0){ 
        retorno = BuscaLetraEmArvore(arv->esquerda, num,  fDescompactado,bm);
     }
-    if(bit == 1) {
+    if(bit==1){
        retorno = BuscaLetraEmArvore(arv->direita, num,  fDescompactado, bm);
     }
     return retorno;
 }
-
 void DecodificaTexto(Tree *arv, FILE *fDescompactado, FILE *fDecofificado, bitmap *bm){
     if(!fDescompactado || !fDecofificado) return;
     char caracter = '\0';
     int num = 0;
     int tam = bitmapGetLength(bm);
-    while (caracter != '^' && num<tam) {
+    while (caracter !='^' && num<tam) {
         caracter = BuscaLetraEmArvore(arv, &num, fDescompactado, bm);
-        if(caracter == '^') {
+        if(caracter=='^'){
             break;
         }
        fprintf(fDecofificado, "%c", caracter);
