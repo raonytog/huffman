@@ -24,7 +24,7 @@ int main (int argc, char const *argv[]) {
     strcpy(path, argv[1]);
 
 // int main() {
-//     char path[100] = "texto.txt";
+//     char path[100] = "biblia.txt";
 
     /** Preenche e armazena o vetor dos caracteres e o texto completo */
     int *vetor = calloc(MAX_ASCI, sizeof(int));
@@ -76,7 +76,7 @@ int main (int argc, char const *argv[]) {
      * Funcoes de liberacao 
      */
     LiberaTabelaDeTraducao(traducao, qtd);
-    bitmapLibera(bm);
+    //bitmapLibera(bm);
 
     for (int i = 0; i < qtd; i++)
         LiberaArvore(vetorCaracteres[i]);
@@ -143,11 +143,14 @@ void PreencheBitMap(bitmap *bm, Tree *arv, char *vet, bitmap **tabela, int quant
         unsigned char b = bitmapGetBit(tabela[index], j);
         bitmapAppendLeastSignificantBit(bm, b);
 
-        if (bitmapGetLength(bm) == bitmapGetMaxSize(bm)) {
+        if (bitmapGetLength(bm) == bitmapGetMaxSize(bm) && bitmapGetLength(tabela[index]) != j+1){
             ImprimeBitmapArquivo(bm, arq, 0);
             bitmapLibera(bm);
             bm = bitmapInit(MEGA);
             qtd++;
+        }else if(bitmapGetLength(tabela[index]) == j+1){
+            ImprimeBitmapArquivo(bm, arq, 1);
+            bitmapLibera(bm);
         }
     }
 
@@ -177,7 +180,7 @@ void Compacta(bitmap *bm, Tree *arv, char *vet, bitmap **tabela, int quant, char
     long long int qtdBitsTxt = 0;
     fwrite(&parada, sizeof(short int), 1, fCompactado);
     PreencheBitMap(bm, arv, vet, tabela, quant, fCompactado, path);
-    ImprimeBitmapArquivo(bm, fCompactado, 1);
+    
     
     bitmapLibera(arvBit);
     fclose(fCompactado);

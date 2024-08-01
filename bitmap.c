@@ -89,7 +89,7 @@ bitmap* bitmapInit(unsigned int max_size) {
  */
 unsigned char bitmapGetBit(bitmap* bm, unsigned int index) { // index in bits
 	// verificar se index<bm.length, pois caso contrario, index e' invalido
-	assert(index<bm->length, "Acesso a posicao inexistente no mapa de bits.");
+	//assert(index<bm->length, "Acesso a posicao inexistente no mapa de bits bitmapgetbit.");
 
 	// index/8 e' o indice do byte que contem o bit em questao
 	// 7-(index%8) e' o deslocamento do bit em questao no byte
@@ -105,7 +105,7 @@ unsigned char bitmapGetBit(bitmap* bm, unsigned int index) { // index in bits
  */
 static void bitmapSetBit(bitmap* bm, unsigned int index, unsigned char bit) {
     // verificar se index<bm->length, pois caso contrario, index e' invalido
-    assert(index<bm->length, "Acesso a posicao inexistente no mapa de bits.");
+    assert(index<bm->length, "Acesso a posicao inexistente no mapa de bits bitmapsetbit.");
 
     // index/8 e' o indice do byte que contem o bit em questao
     // 7-(index%8) e' o deslocamento do bit em questao no byte
@@ -135,19 +135,19 @@ void bitmapAppendLeastSignificantBit(bitmap* bm, unsigned char bit) {
 void bitmapRemoveLeastSignificantBit(bitmap* bm) {
     // Verificar se há pelo menos um bit no bitmap
 	if(!bm) return;
-		int byte_pos = bm->length / 8;
-		int bit_pos = bm->length % 8;
+	int byte_pos = bm->length / 8;
+	int bit_pos = bm->length % 8;
 
-		// Cria uma máscara para limpar o bit específico
-		unsigned char mask = ~(1 << (7 - bit_pos));
+	// Cria uma máscara para limpar o bit específico
+	unsigned char mask = ~(1 << (7 - bit_pos));
 
-		// Aplica a máscara ao byte correspondente
-		bm->contents[byte_pos] &= mask;
-    if (bm->length > 0) {
-		// Decrementar o tamanho do bitmap para ignorar o último bit
-		
+	// Aplica a máscara ao byte correspondente
+	bm->contents[byte_pos] &= mask;
+
+	// Decrementar o tamanho do bitmap para ignorar o último bit	
+    if (bm->length > 0)
 		bm->length--;
-    }
+    
 }
 
 /**

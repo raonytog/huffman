@@ -4,13 +4,13 @@
 #define MEGA 1000000
 #include "tree.h"
 
-// /**
-//  * Ordem para recuperacao:
-//  * 1. Tamanho bitmap arvore
-//  * 2. Bitmap arvore  
-//  * 3. Tamanho bitmap texto
-//  * 4. Bitmap texto
-//  */
+// // /**
+// //  * Ordem para recuperacao:
+// //  * 1. Tamanho bitmap arvore
+// //  * 2. Bitmap arvore  
+// //  * 3. Tamanho bitmap texto
+// //  * 4. Bitmap texto
+// //  */
 
 bitmap *RecuperaBitmap(unsigned int *size, FILE *fDescompactado);
 
@@ -20,11 +20,11 @@ int main (int argc, char const *argv[]) {
       exit(1);
    }
 
-   char path[100]; 
-   strcpy(path, argv[1]);
+    char path[100]; 
+    strcpy(path, argv[1]);
 
 // int main() {
-//      char path[100] = "print.png.comp";
+//     char path[100] = "dua_lipa.jpg.comp";
 
    FILE *fDescompactado = NULL;
    fDescompactado = fopen(path, "rb");
