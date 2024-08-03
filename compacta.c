@@ -6,12 +6,43 @@
 #include "bitmap.h"
 
 #define MAX_ASCI 256  /** tamanho maximo do vetor com as qts de uso de cada letra */
-#define MEGA 1000000
-/* 1000000 */
+#define MEGA 1000000 /** tamanho maximo do mapa de bits */
 
+
+/// @brief Le o arquivo a ser compactado pela primeira vez, a fim de criar 
+/// o vetor com os pesos de cara caracter usado
+/// @param vetor vetor de pesos
+/// @param path caminho do arquivo
 void PreencheVetorTexto(int *vetor, char *path);
+
+/// @brief Preenche o mapa de bits do arquivo a ser compactado
+/// @param bm mapa de bits do arquivo
+/// @param arv arvore binaria
+/// @param vet vetor de caracteres
+/// @param tabela tabela de traducao com os caracteres e seus codigos
+/// @param quant quantidade de indices no vetor de caracteres
+/// @param arq arquivo a ser impresso o mapa de bits, quanto lotado
+/// @param path caminho para criacao do arquivo compactado
 void PreencheBitMap(bitmap *bm, Tree *arv, char *vet, bitmap **tabela, int quant, FILE *arq, char *path);
+
+/// @brief Compacta o arquivo, escrevendo suas informações no arquivo binario na seguinte ordem:
+/// 1. Tamanho do mapa de bits da arvore
+/// 2. Mapa de bits da arvore
+/// 3. Quantidade de caracteres de parada presentes no arquivo
+/// 4. Mapa de bits do arquivo compactado
+/// @param bm mapa de bits do arquivo
+/// @param arv arvore binaria
+/// @param vet vetor de letras
+/// @param tabela tabalea de traducao de letra
+/// @param quant tamanho do vetor de letras
+/// @param path caminho onde o arquivo sera salvo
+/// @param parada quantidade de caracteres de parada
 void Compacta(bitmap *bm, Tree *arv, char *vet, bitmap **tabela, int quant, char *path, short int parada);
+
+/// @brief Retorna a quantidade de caracteres de parada presentes no arquivo
+/// @param vetor vetor de peso dos caracteres
+/// @param c caractere de paraa
+/// @return quantidade de caracteres de parada no arquivo
 short int retornaQtdParada(int *vetor, char c);
 
 int main (int argc, char const *argv[]) {
@@ -22,8 +53,6 @@ int main (int argc, char const *argv[]) {
 
     char path[100]; 
     strcpy(path, argv[1]);
- /*int main() {
-   char path[100] = "texto.txt";*/
 
     /** Preenche e armazena o vetor dos caracteres e o texto completo */
     int *vetor = calloc(MAX_ASCI, sizeof(int));
@@ -59,7 +88,6 @@ int main (int argc, char const *argv[]) {
      */
     bitmap **traducao = tabelaTraducao(caracteresEmOrdem, arvore, qtd);
     bitmap *bm = bitmapInit(MEGA);
-    // PreencheBitMap(bm, arvore, text, caracteresEmOrdem, traducao, qtd);
 
     /**
      * Compacta o arquivo de texto traduzido para um arquivo binario,
@@ -74,7 +102,6 @@ int main (int argc, char const *argv[]) {
      * Funcoes de liberacao 
      */
     LiberaTabelaDeTraducao(traducao, qtd);
-    //bitmapLibera(bm);
 
     for (int i = 0; i < qtd; i++)
         LiberaArvore(vetorCaracteres[i]);
@@ -110,7 +137,6 @@ void PreencheVetorTexto(int *vetor, char* path) {
 void PreencheBitMap(bitmap *bm, Tree *arv, char *vet, bitmap **tabela, int quant, FILE *arq, char *path) {
     if (!bm || !arv) return;
 
-    /** Insere os demais caracteres */
     unsigned char letra = '\0';
     int qtd = 0;
     FILE *fText = fopen(path, "rb");
@@ -146,6 +172,7 @@ void PreencheBitMap(bitmap *bm, Tree *arv, char *vet, bitmap **tabela, int quant
             bitmapLibera(bm);
             bm = bitmapInit(MEGA);
             qtd++;
+            
         }else if(bitmapGetLength(tabela[index]) == j+1){
             ImprimeBitmapArquivo(bm, arq, 1);
             bitmapLibera(bm);
@@ -174,7 +201,7 @@ void Compacta(bitmap *bm, Tree *arv, char *vet, bitmap **tabela, int quant, char
     fwrite(&bitsArv, sizeof(short int), 1, fCompactado);
     ImprimeBitmapArquivo(arvBit, fCompactado, 1);
     
-    /** Escreve o bitmap do texto */
+    /** Escreve o bitmap do texto e a quantidade de caracteres de parada */
     long long int qtdBitsTxt = 0;
     fwrite(&parada, sizeof(short int), 1, fCompactado);
     PreencheBitMap(bm, arv, vet, tabela, quant, fCompactado, path);

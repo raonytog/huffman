@@ -1,1 +1,2 @@
 # huffman
+Repositório destinado ao trabalho de Estrutura de Dados, do terceiro semestre, na Universidade Federal do Espírito Santo. Neste trabalho, o objetivo foi criar um compactador e um descompactador de arquivos utilizado o método de codificação de huffman.

@@ -85,28 +85,27 @@ int particao(Tree **vet, int inicio, int fim) {
     return i+1;
 }
 
-Tree *ParticaoLista(Tree *inicio, Tree *fim){
-    Tree *pivot = inicio, *front = inicio;
-    Caracter *temp = NULL; 
+// Tree *ParticaoLista(Tree *inicio, Tree *fim){
+//     Tree *pivot = inicio, *front = inicio;
+//     Caracter *temp = NULL; 
 
-    while (front && front != fim) { 
-        if (RetornaPesoCaracter(front) < RetornaPesoCaracter(fim)) { 
-            pivot = inicio; 
-            temp = inicio->info; 
-            inicio->info= front->info; 
-            front->info = temp; 
-            inicio = inicio->direita; 
-        } 
-        front = front->direita; 
-    }
+//     while (front && front != fim) { 
+//         if (RetornaPesoCaracter(front) < RetornaPesoCaracter(fim)) { 
+//             pivot = inicio; 
+//             temp = inicio->info; 
+//             inicio->info= front->info; 
+//             front->info = temp; 
+//             inicio = inicio->direita; 
+//         } 
+//         front = front->direita; 
+//     }
     
-    temp = inicio->info; 
-    inicio->info= fim->info; 
-    fim->info = temp; 
-    return pivot; 
-}
+//     temp = inicio->info; 
+//     inicio->info= fim->info; 
+//     fim->info = temp; 
+//     return pivot; 
+// }
 
-/** Funcoes gerais do tad*/
 Caracter *CriaCaracter(int letter, int peso){
     if(!peso) return NULL;
 
@@ -273,7 +272,6 @@ bitmap *PreencheBitmapArvore(Tree *tree, FILE *fCompactado, bitmap *arvBit) {
     PreencheBitmapArvore(tree->direita, fCompactado,  arvBit);
 }
 
-/** Funcoes de liberacao */
 void LiberaArvore(Tree *treeNode) {
     if (!treeNode) return;
 
@@ -310,9 +308,8 @@ unsigned char *CharToByte(unsigned char c) {
         return NULL;
     }
 
-    // Calcula o número em binário
     for (int i = 7; i >= 0; i--) {
-        convertido[i] = (num % 2) + '0'; // Convertendo para '0' ou '1'
+        convertido[i] = (num % 2) + '0';
         num /= 2;
     }
 
