@@ -136,17 +136,20 @@ void bitmapRemoveLeastSignificantBit(bitmap* bm) {
     // Verificar se há pelo menos um bit no bitmap
 	if(!bm) return;
 	int byte_pos = bm->length / 8;
-	int bit_pos = bm->length % 8;
-
-	// Cria uma máscara para limpar o bit específico
+	int bit_pos = bm->length % 8;	
 	unsigned char mask = ~(1 << (7 - bit_pos));
 
 	// Aplica a máscara ao byte correspondente
 	bm->contents[byte_pos] &= mask;
 
+
+	// Cria uma máscara para limpar o bit específico
+	
 	// Decrementar o tamanho do bitmap para ignorar o último bit	
-    if (bm->length > 0)
+    if (bm->length > 0){
+	
 		bm->length--;
+	}
     
 }
 

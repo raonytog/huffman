@@ -22,9 +22,8 @@ int main (int argc, char const *argv[]) {
 
     char path[100]; 
     strcpy(path, argv[1]);
-
-// int main() {
-//     char path[100] = "biblia.txt";
+ /*int main() {
+   char path[100] = "texto.txt";*/
 
     /** Preenche e armazena o vetor dos caracteres e o texto completo */
     int *vetor = calloc(MAX_ASCI, sizeof(int));
