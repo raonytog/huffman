@@ -371,12 +371,12 @@ Tree *ColocandoConteudoArvore(Tree *arv, bitmap *bits, unsigned int *tamAtual){
     return arv;
 }
 char BuscaLetraEmArvore(Tree *arv, int *num, FILE *fDescompactado, bitmap *bm){
-    if(!arv || !fDescompactado) return '\0';
+    if(!arv || !fDescompactado || !bm  || !bitmapGetLength(bm)) return '\0';
 
     if(!arv->direita && !arv->esquerda) return arv->info->letra;
-    if(bitmapGetLength(bm)==(*num)){
-        bitmapLibera(bm);
-        bm = bitmapInit(1000000);
+   
+    if(bitmapGetMaxSize(bm)==(*num)){
+        InsereLenght(0, bm);
         LerTextoBinArquivo(bm, fDescompactado);
         (*num) = 0;
     }
@@ -394,21 +394,30 @@ char BuscaLetraEmArvore(Tree *arv, int *num, FILE *fDescompactado, bitmap *bm){
 }
 void DecodificaTexto(Tree *arv, FILE *fDescompactado, FILE *fDecofificado, bitmap *bm, short int paradas, short int *numAtual){
     if(!fDescompactado || !fDecofificado) return;
+    int acabou = LerTextoBinArquivo(bm,fDescompactado);
+    int rodadas = 0;
+    while(1) {
     char caracter = '\0';
     int num = 0;
     int tam = bitmapGetLength(bm);
-    while (num<tam) {
-        caracter = BuscaLetraEmArvore(arv, &num, fDescompactado, bm);
-        if(caracter == 3){
-            (*numAtual)++;
-            if((*numAtual)==121){
-                printf("!!!");
+    
+        while (num<tam && tam!=0) {
+            caracter = BuscaLetraEmArvore(arv, &num, fDescompactado, bm);
+            if(caracter == 3){
+                (*numAtual)++;
+                if((*numAtual)==paradas) {
+                    
+                    return;
+                    }
             }
-            if((*numAtual)==paradas) {
-                return;}
+            fprintf(fDecofificado, "%c", caracter);
         }
-        fprintf(fDecofificado, "%c", caracter);
-    }
+         if(bm){
+           InsereLenght(0,bm);
+         }
+         acabou = LerTextoBinArquivo(bm,fDescompactado);
+
+        }
 }
 
 int NumMaxCaracteres(Tree *arv){

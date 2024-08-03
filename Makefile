@@ -29,3 +29,6 @@ rund: compd
 
 valgrindd: compd
 	valgrind --leak-check=full -s --track-origins=yes ./descompacta
+
+vdoido:
+	gcc -Wall -Wextra -Wno-unused-result -Wno-unused-parameter -o compacta compacta.c tree.c bitmap.c -lm
