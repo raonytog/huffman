@@ -27,41 +27,21 @@ void assert(int testresult, char* message) {
 	}
 }
 
-
-/**
- * Retorna o conteudo do mapa de bits.
- * @param bm O mapa de bits.
- */
 unsigned char* bitmapGetContents(bitmap* bm) {
 	if (!bm) return NULL;
 	return bm->contents;
 }
 
-/**
- * Retorna o tamanho maximo do mapa de bits.
- * @param bm O mapa de bits.
- * @return O tamanho maximo do mapa de bits.
- */
 unsigned int bitmapGetMaxSize(bitmap* bm) {
 	if (!bm) return 0;
 	return bm->max_size;
 }
 
-/**
- * Retorna o tamanho atual do mapa de bits.
- * @param bm O mapa de bits.
- * @return O tamanho atual do mapa de bits.
- */
 unsigned int bitmapGetLength(bitmap* bm) {
 	if (!bm) return 0;
 	return bm->length;
 }
 
-/**
- * Constroi um novo mapa de bits, definindo um tamanho maximo.
- * @param max_size O tamanho maximo para o mapa de bits.
- * @return O mapa de bits inicializado.
- */
 bitmap* bitmapInit(unsigned int max_size) {
 	bitmap* bm = (bitmap*)malloc(sizeof(bitmap));
 	// definir tamanho maximo em bytes, com arredondamento para cima
@@ -80,29 +60,14 @@ bitmap* bitmapInit(unsigned int max_size) {
 	return bm;
 }
 
-/**
- * Retorna o valor do bit na posicao index.
- * @param bm O mapa de bits.
- * @param index A posicao do bit.
- * @pre index<bitmapGetLength(bm)
- * @return O valor do bit.
- */
 unsigned char bitmapGetBit(bitmap* bm, unsigned int index) { // index in bits
 	// verificar se index<bm.length, pois caso contrario, index e' invalido
-	//assert(index<bm->length, "Acesso a posicao inexistente no mapa de bits bitmapgetbit.");
 
 	// index/8 e' o indice do byte que contem o bit em questao
 	// 7-(index%8) e' o deslocamento do bit em questao no byte
 	return (bm->contents[index/8] >> (7-(index%8))) & 0x01;
 }
 
-/**
- * Modifica o valor do bit na posicao index.
- * @param bm O mapa de bits.
- * @param index A posicao do bit.
- * @param bit O novo valor do bit.
- * @post bitmapGetBit(bm,index)==bit
- */
 static void bitmapSetBit(bitmap* bm, unsigned int index, unsigned char bit) {
     // verificar se index<bm->length, pois caso contrario, index e' invalido
     assert(index<bm->length, "Acesso a posicao inexistente no mapa de bits bitmapsetbit.");
@@ -114,15 +79,6 @@ static void bitmapSetBit(bitmap* bm, unsigned int index, unsigned char bit) {
     bm->contents[index/8]= bm->contents[index/8] | bit;
 }
 
-
-/**
- * Adiciona um bit no final do mapa de bits.
- * @param bm O mapa de bits.
- * @param bit O novo valor do bit.
- * @pre bitmapGetLength(bm) < bitmapGetMaxSize(bm)
- * @post (bitmapGetBit(bm,bitmapGetLength(bm) @ pre)==bit) 
- * and (bitmapGetLength(bm) == bitmapGetLength(bm) @ pre+1)
- */
 void bitmapAppendLeastSignificantBit(bitmap* bm, unsigned char bit) {
 	// verificar se bm->length<bm->max_size, caso contrario, o bitmap esta' cheio
 	assert(bm->length<bm->max_size, "Tamanho maximo excedido no mapa de bits.");
@@ -133,30 +89,16 @@ void bitmapAppendLeastSignificantBit(bitmap* bm, unsigned char bit) {
 }
 
 void bitmapRemoveLeastSignificantBit(bitmap* bm) {
-    // Verificar se há pelo menos um bit no bitmap
 	if(!bm) return;
+
 	int byte_pos = bm->length / 8;
 	int bit_pos = bm->length % 8;	
 	unsigned char mask = ~(1 << (7 - bit_pos));
-
-	// Aplica a máscara ao byte correspondente
 	bm->contents[byte_pos] &= mask;
-
-
-	// Cria uma máscara para limpar o bit específico
 	
-	// Decrementar o tamanho do bitmap para ignorar o último bit	
-    if (bm->length > 0){
-	
-		bm->length--;
-	}
-    
+    if (bm->length > 0) bm->length--;
 }
 
-/**
- * Libera a memória dinâmica alocada para o mapa de bits.
- * @param bm O mapa de bits.
- */
 void bitmapLibera (bitmap* bm) {
 	if(!bm) return;
 
@@ -167,10 +109,8 @@ void bitmapLibera (bitmap* bm) {
 void bitmapPrint(bitmap *bm) {
 	if (!bm) return;
 
-	for (int i = 0; i < bitmapGetLength(bm); i++) {
-		// printf("bit #%d = %0x\n", i, bitmapGetBit(bm, i));
+	for (int i = 0; i < bitmapGetLength(bm); i++)
 		printf("%0x", bitmapGetBit(bm, i));
-	}
 	
 	printf("\n");
 }
@@ -195,7 +135,9 @@ bitmap *EsvaziaBitMap(bitmap *bm){
 	
     while(bitmapGetLength(bm) > 0) 
 		bitmapRemoveLeastSignificantBit(bm);
+
 	if(bitmapGetLength(bm)==0) bitmapRemoveLeastSignificantBit(bm);
+
     return bm;
 }
 

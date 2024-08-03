@@ -8,10 +8,6 @@ compc:
 	clear
 	gcc compacta.c tree.c bitmap.c -o compacta -lm
 
-# Executa a codificação do arquivo parametrizado
-runc: compc
-	./compacta 
-
 # Compila e executa o valgrind do codificador
 valgrindc: compc
 	valgrind --leak-check=full -s --track-origins=yes ./compacta
@@ -23,12 +19,5 @@ compd:
 	clear
 	gcc descompacta.c tree.c bitmap.c -o descompacta -lm
 
-# Executa a decodificação do arquivo parametrizado
-rund: compd
-	./descompacta 
-
 valgrindd: compd
 	valgrind --leak-check=full -s --track-origins=yes ./descompacta
-
-vdoido:
-	gcc -Wall -Wextra -Wno-unused-result -Wno-unused-parameter -o compacta compacta.c tree.c bitmap.c -lm

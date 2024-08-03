@@ -40,7 +40,6 @@ int main (int argc, char const *argv[]) {
     qtd++;
     
     qsort(vetorCaracteres, qtd, sizeof(Tree*), Compara); 
-    ImprimeVetor(vetorCaracteres, qtd);
 
     /** 
      * Cria e preenche o vetor contendo apenas os caracteres 

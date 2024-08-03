@@ -36,7 +36,7 @@ int main (int argc, char const *argv[]) {
    /** Recupera a Arvore do arquivo binario */
    Tree *arvore = NULL;    bitmap *bits = bitmapInit(10000);
    unsigned char *texto;   int short tamBits = 0;
-   arvore =  RecuperaArvore(fDescompactado, arvore, texto, bits);
+   arvore =  RecuperaArvore(fDescompactado, arvore, bits);
    
    /** Path para arquivo de saida descopactado */
    char pathDecodificado[100] = "desc_"; strcat(pathDecodificado, path);
