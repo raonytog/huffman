@@ -26,7 +26,7 @@ int main (int argc, char const *argv[]) {
    arvore =  RecuperaArvore(fDescompactado, arvore, bits);
    
    /** Path para arquivo de saida descopactado */
-   char pathDecodificado[100] = "desc_"; strcat(pathDecodificado, path);
+   char pathDecodificado[100]; strcpy(pathDecodificado, path);
    pathDecodificado[strlen(pathDecodificado)-5] = '\0';
 
    /** Escreve a quantidade de bytes de texto a ler */
